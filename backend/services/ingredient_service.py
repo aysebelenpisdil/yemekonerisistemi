@@ -5,12 +5,14 @@ import json
 from pathlib import Path
 from typing import List, Optional
 from models.ingredient import Ingredient
+from utils.search_utils import SearchEngine
 
 class IngredientService:
     """Malzeme yönetim servisi"""
 
     def __init__(self):
         self.ingredients: List[Ingredient] = []
+        self.search_engine = SearchEngine()
         self._load_ingredients()
 
     def _load_ingredients(self):
@@ -27,16 +29,38 @@ class IngredientService:
             self.ingredients = []
 
     def search_ingredients(self, query: Optional[str] = None, limit: int = 50) -> List[Ingredient]:
-        """Malzeme ara"""
+        """
+        Gelişmiş malzeme arama - Trendyol benzeri
+
+        Features:
+        - Fuzzy matching (typo tolerance)
+        - Turkish character support
+        - Partial matching
+        - Relevance scoring
+        """
         if not query:
             return self.ingredients[:limit]
 
-        query_lower = query.lower()
-        results = [
-            ing for ing in self.ingredients
-            if query_lower in ing.name.lower()
-        ]
-        return results[:limit]
+        # Tüm malzeme isimlerini çıkar
+        ingredient_names = [ing.name for ing in self.ingredients]
+
+        # SearchEngine ile ara (threshold=30, minimum %30 match)
+        search_results = self.search_engine.search(
+            query=query,
+            items=ingredient_names,
+            threshold=30.0,
+            limit=limit
+        )
+
+        # Sonuçları Ingredient objelerine çevir (sıralı)
+        results = []
+        for name, score in search_results:
+            # İlgili ingredient'i bul
+            ingredient = next((ing for ing in self.ingredients if ing.name == name), None)
+            if ingredient:
+                results.append(ingredient)
+
+        return results
 
     def get_ingredient_by_name(self, name: str) -> Optional[Ingredient]:
         """İsme göre malzeme bul"""

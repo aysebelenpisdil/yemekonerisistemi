@@ -124,7 +124,7 @@ class InventoryFragment : Fragment() {
                 val response = RetrofitClient.apiService.getIngredientNames()
                 if (response.isSuccessful && response.body() != null) {
                     allIngredientNames = response.body()!!
-                    setupAutoComplete(allIngredientNames)
+                    setupRealTimeSearch()
                 } else {
                     Toast.makeText(
                         context,
@@ -145,7 +145,62 @@ class InventoryFragment : Fragment() {
     }
 
     /**
-     * AutoComplete setup
+     * Real-time fuzzy search setup (Trendyol benzeri)
+     * Backend'den canlı arama yapar
+     */
+    private fun setupRealTimeSearch() {
+        var searchJob: kotlinx.coroutines.Job? = null
+
+        searchAutoComplete.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: android.text.Editable?) {
+                val query = s.toString()
+
+                // Önceki arama job'ını iptal et (debouncing)
+                searchJob?.cancel()
+
+                // En az 2 karakter girilmişse ara
+                if (query.length >= 2) {
+                    searchJob = lifecycleScope.launch {
+                        // 300ms bekle (debouncing)
+                        kotlinx.coroutines.delay(300)
+
+                        try {
+                            // Backend'den fuzzy search ile ara
+                            val response = RetrofitClient.apiService.searchIngredients(query, 20)
+                            if (response.isSuccessful && response.body() != null) {
+                                val results = response.body()!!.results
+                                val ingredientNames = results.map { it.name }
+
+                                // AutoComplete adapter'ı güncelle
+                                val adapter = ArrayAdapter(
+                                    requireContext(),
+                                    android.R.layout.simple_dropdown_item_1line,
+                                    ingredientNames
+                                )
+                                searchAutoComplete.setAdapter(adapter)
+
+                                // Dropdown'ı göster
+                                if (ingredientNames.isNotEmpty()) {
+                                    searchAutoComplete.showDropDown()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            // Network hatası - sessizce devam et
+                        }
+                    }
+                }
+            }
+        })
+
+        // İlk threshold ayarı
+        searchAutoComplete.threshold = 2
+    }
+
+    /**
+     * AutoComplete setup (offline fallback)
      */
     private fun setupAutoComplete(ingredientNames: List<String>) {
         val adapter = ArrayAdapter(
