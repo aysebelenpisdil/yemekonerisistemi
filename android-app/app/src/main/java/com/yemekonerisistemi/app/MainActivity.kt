@@ -20,10 +20,15 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Bottom Navigation kurulumu (opsiyonel)
+        // Bottom Navigation kurulumu
         findViewById<BottomNavigationView>(R.id.bottom_navigation)?.let {
             it.setOnItemSelectedListener { item ->
                 when (item.itemId) {
+                    R.id.navigation_home -> {
+                        // Ana Sayfa ekranına git
+                        navController.navigate(R.id.homeFragment)
+                        true
+                    }
                     R.id.navigation_inventory -> {
                         // Buzdolabım ekranına git
                         navController.navigate(R.id.inventoryFragment)

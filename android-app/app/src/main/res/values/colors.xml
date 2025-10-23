@@ -1,67 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Material Design 3 Renk Paleti -->
+    <!-- ============================================ -->
+    <!-- MODERN BEYAZ-KREM-MAVİ PALETI              -->
+    <!-- Spec Kit Design System                      -->
+    <!-- ============================================ -->
 
-    <!-- Ana Renkler -->
-    <color name="primary">#FF6B35</color>
-    <color name="on_primary">#FFFFFF</color>
-    <color name="primary_container">#FFE5DB</color>
-    <color name="on_primary_container">#3A1607</color>
+    <!-- Ana Renkler (Mavi Tonları) -->
+    <color name="primary">#4A90E2</color>              <!-- Modern Mavi -->
+    <color name="primary_dark">#357ABD</color>          <!-- Koyu Mavi -->
+    <color name="primary_light">#5DADE2</color>         <!-- Açık Mavi -->
+    <color name="on_primary">#FFFFFF</color>            <!-- Beyaz Text -->
 
-    <!-- İkincil Renkler -->
-    <color name="secondary">#4ECDC4</color>
-    <color name="on_secondary">#FFFFFF</color>
-    <color name="secondary_container">#D7F5F3</color>
-    <color name="on_secondary_container">#00201E</color>
+    <color name="primary_container">#D6E9F8</color>     <!-- Açık Mavi Container -->
+    <color name="on_primary_container">#1A4D7A</color>  <!-- Koyu Text -->
 
-    <!-- Üçüncül Renkler -->
-    <color name="tertiary">#7B61FF</color>
-    <color name="on_tertiary">#FFFFFF</color>
-    <color name="tertiary_container">#E8DEFF</color>
-    <color name="on_tertiary_container">#21005D</color>
+    <!-- İkincil Renkler (Krem Tonları) -->
+    <color name="secondary">#F5F5DC</color>             <!-- Krem/Bej -->
+    <color name="secondary_variant">#FAF8F3</color>     <!-- Açık Krem -->
+    <color name="secondary_dark">#E8E6D0</color>        <!-- Koyu Krem -->
+    <color name="on_secondary">#2C3E50</color>          <!-- Koyu Text -->
 
-    <!-- Arka Plan ve Yüzey -->
-    <color name="background">#FAFAFA</color>
-    <color name="on_background">#1C1B1F</color>
-    <color name="surface">#FFFFFF</color>
-    <color name="on_surface">#1C1B1F</color>
-    <color name="surface_variant">#F5F5F5</color>
-    <color name="on_surface_variant">#49454F</color>
+    <color name="secondary_container">#FFFEF8</color>   <!-- Çok Açık Krem -->
+    <color name="on_secondary_container">#3E3D32</color><!-- Koyu Text -->
 
-    <!-- Hata Renkleri -->
-    <color name="error">#BA1A1A</color>
-    <color name="on_error">#FFFFFF</color>
-    <color name="error_container">#FFDAD6</color>
-    <color name="on_error_container">#410002</color>
+    <!-- Arka Plan ve Yüzey (Beyaz Tonları) -->
+    <color name="background">#FFFFFF</color>            <!-- Beyaz -->
+    <color name="on_background">#2C3E50</color>         <!-- Koyu Gri Text -->
 
-    <!-- Outline -->
-    <color name="outline">#79747E</color>
-    <color name="outline_variant">#CAC4D0</color>
+    <color name="surface">#F8F9FA</color>               <!-- Açık Gri Yüzey -->
+    <color name="surface_bright">#FFFFFF</color>        <!-- Parlak Beyaz -->
+    <color name="surface_dim">#F0F2F5</color>           <!-- Hafif Gri -->
+    <color name="on_surface">#2C3E50</color>            <!-- Koyu Text -->
 
-    <!-- Kategori Renkleri -->
-    <color name="category_vegetables">#4CAF50</color>
-    <color name="category_meat">#F44336</color>
-    <color name="category_dairy">#2196F3</color>
-    <color name="category_grains">#FF9800</color>
-    <color name="category_spices">#9C27B0</color>
-    <color name="category_fruits">#FFC107</color>
+    <color name="surface_variant">#ECF0F5</color>       <!-- Variant Yüzey -->
+    <color name="on_surface_variant">#5A6B7D</color>    <!-- Orta Gri Text -->
 
-    <!-- Durum Renkleri -->
-    <color name="success">#4CAF50</color>
-    <color name="warning">#FF9800</color>
-    <color name="info">#2196F3</color>
+    <!-- Text Renkleri -->
+    <color name="text_primary">#2C3E50</color>          <!-- Koyu Gri (Ana Metin) -->
+    <color name="text_secondary">#7F8C8D</color>        <!-- Orta Gri (İkincil) -->
+    <color name="text_hint">#BDC3C7</color>             <!-- Açık Gri (Hint) -->
+    <color name="text_disabled">#E0E0E0</color>         <!-- Çok Açık (Disabled) -->
 
-    <!-- Şeffaflıklar -->
-    <color name="scrim">#52000000</color>
-    <color name="divider">#1F000000</color>
+    <!-- Accent Renkleri -->
+    <color name="accent">#5DADE2</color>                <!-- Açık Mavi (Vurgu) -->
+    <color name="accent_secondary">#85C1E9</color>      <!-- Daha Açık Mavi -->
+
+    <!-- Hata ve Durum Renkleri -->
+    <color name="error">#E74C3C</color>                 <!-- Kırmızı -->
+    <color name="on_error">#FFFFFF</color>              <!-- Beyaz Text -->
+    <color name="error_container">#FADBD8</color>       <!-- Açık Kırmızı -->
+    <color name="on_error_container">#8B0000</color>    <!-- Koyu Kırmızı -->
+
+    <color name="success">#27AE60</color>               <!-- Yeşil -->
+    <color name="warning">#F39C12</color>               <!-- Turuncu -->
+    <color name="info">#3498DB</color>                  <!-- Bilgi Mavisi -->
+
+    <!-- Outline ve Divider -->
+    <color name="outline">#BDC3C7</color>               <!-- Kenar Çizgisi -->
+    <color name="outline_variant">#E0E0E0</color>       <!-- Açık Kenar -->
+    <color name="divider">#ECEFF1</color>               <!-- Ayırıcı -->
+
+    <!-- Card ve Elevation -->
+    <color name="card_background">#FFFFFF</color>       <!-- Card Arka Plan -->
+    <color name="card_border">#ECEFF1</color>           <!-- Card Kenar -->
+    <color name="card_shadow">#1A000000</color>         <!-- Gölge (10% opacity) -->
+    <color name="elevation_overlay">#0D000000</color>   <!-- Elevation (5% opacity) -->
+
+    <!-- Kategori Renkleri (Malzemeler için) -->
+    <color name="category_vegetables">#27AE60</color>   <!-- Sebzeler (Yeşil) -->
+    <color name="category_fruits">#E67E22</color>       <!-- Meyveler (Turuncu) -->
+    <color name="category_meat">#C0392B</color>         <!-- Et & Tavuk (Kırmızı) -->
+    <color name="category_dairy">#3498DB</color>        <!-- Süt Ürünleri (Mavi) -->
+    <color name="category_grains">#D4A373</color>       <!-- Tahıllar (Kahve) -->
+    <color name="category_spices">#8E44AD</color>       <!-- Baharatlar (Mor) -->
+    <color name="category_beverages">#16A085</color>    <!-- İçecekler (Turkuaz) -->
+    <color name="category_other">#95A5A6</color>        <!-- Diğer (Gri) -->
 
     <!-- Chip Renkleri -->
-    <color name="chip_background">#F0F0F0</color>
-    <color name="chip_stroke">#E0E0E0</color>
-    <color name="chip_selected">#FFE5DB</color>
+    <color name="chip_background">#ECF0F5</color>       <!-- Chip Arka Plan -->
+    <color name="chip_stroke">#BDC3C7</color>           <!-- Chip Kenar -->
+    <color name="chip_selected">#D6E9F8</color>         <!-- Seçili Chip -->
+    <color name="chip_selected_stroke">#4A90E2</color>  <!-- Seçili Kenar -->
+
+    <!-- Button Renkleri -->
+    <color name="button_primary">#4A90E2</color>        <!-- Primary Button -->
+    <color name="button_secondary">#F5F5DC</color>      <!-- Secondary Button -->
+    <color name="button_disabled">#E0E0E0</color>       <!-- Disabled Button -->
+    <color name="button_text_disabled">#BDC3C7</color>  <!-- Disabled Text -->
+
+    <!-- Input Renkleri -->
+    <color name="input_background">#FFFFFF</color>      <!-- Input Arka Plan -->
+    <color name="input_stroke">#BDC3C7</color>          <!-- Input Kenar -->
+    <color name="input_stroke_focused">#4A90E2</color>  <!-- Focused Kenar -->
+    <color name="input_text">#2C3E50</color>            <!-- Input Text -->
+    <color name="input_hint">#7F8C8D</color>            <!-- Hint Text -->
+
+    <!-- Scrim (Overlay) -->
+    <color name="scrim">#52000000</color>               <!-- Modal Overlay (32%) -->
+    <color name="scrim_light">#33000000</color>         <!-- Açık Overlay (20%) -->
+
+    <!-- Ripple Effect -->
+    <color name="ripple">#1F4A90E2</color>              <!-- Mavi Ripple (12%) -->
+    <color name="ripple_light">#0D4A90E2</color>        <!-- Açık Ripple (5%) -->
+
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#4A90E2</color>        <!-- Gradient Başlangıç -->
+    <color name="gradient_end">#5DADE2</color>          <!-- Gradient Bitiş -->
+
+    <!-- Shimmer Loading -->
+    <color name="shimmer_base">#F0F2F5</color>          <!-- Shimmer Base -->
+    <color name="shimmer_highlight">#FFFFFF</color>     <!-- Shimmer Highlight -->
 
     <!-- Sistem Renkleri -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+
+    <!-- Dark Mode (gelecek için hazırlık) -->
+    <color name="dark_background">#1A1A2E</color>
+    <color name="dark_surface">#16213E</color>
+    <color name="dark_primary">#5DADE2</color>
 </resources>

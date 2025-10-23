@@ -14,11 +14,8 @@
         <item name="colorSecondaryContainer">@color/secondary_container</item>
         <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
 
-        <!-- Üçüncül Renkler -->
-        <item name="colorTertiary">@color/tertiary</item>
-        <item name="colorOnTertiary">@color/on_tertiary</item>
-        <item name="colorTertiaryContainer">@color/tertiary_container</item>
-        <item name="colorOnTertiaryContainer">@color/on_tertiary_container</item>
+        <!-- Accent Renkleri -->
+        <item name="colorAccent">@color/accent</item>
 
         <!-- Arka Plan ve Yüzey -->
         <item name="android:colorBackground">@color/background</item>
@@ -42,16 +39,31 @@
         <item name="android:statusBarColor">@color/primary</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
 
-        <!-- Typography -->
-        <item name="textAppearanceDisplayLarge">@style/TextAppearance.YemekOneri.DisplayLarge</item>
-        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.YemekOneri.HeadlineLarge</item>
-        <item name="textAppearanceTitleLarge">@style/TextAppearance.YemekOneri.TitleLarge</item>
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.YemekOneri.BodyLarge</item>
+        <!-- Typography (Custom Design System) -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.App.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.App.Headline2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.App.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.App.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.App.Caption</item>
+        <item name="textAppearanceButton">@style/TextAppearance.App.Button</item>
+
+        <!-- Widget Styles (Custom Design System) -->
+        <item name="materialCardViewStyle">@style/Widget.App.CardView</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
+        <item name="chipStyle">@style/Widget.App.Chip</item>
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+        <item name="floatingActionButtonStyle">@style/Widget.App.FloatingActionButton</item>
+        <item name="extendedFloatingActionButtonStyle">@style/Widget.App.ExtendedFloatingActionButton</item>
 
         <!-- Shape -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.YemekOneri.SmallComponent</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.YemekOneri.MediumComponent</item>
         <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.YemekOneri.LargeComponent</item>
+
+        <!-- Ripple Color -->
+        <item name="colorControlHighlight">@color/ripple</item>
     </style>
 
     <!-- AppBar Tema -->

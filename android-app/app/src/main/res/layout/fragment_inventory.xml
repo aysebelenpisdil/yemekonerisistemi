@@ -52,7 +52,7 @@
                     android:orientation="horizontal"
                     android:padding="8dp">
 
-                    <!-- Arama Alanı -->
+                    <!-- Arama Alanı (AutoCompleteTextView) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/searchInputLayout"
                         android:layout_width="0dp"
@@ -62,13 +62,29 @@
                         android:hint="Malzeme ara veya ekle"
                         app:startIconDrawable="@drawable/ic_search_24">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/searchEditText"
+                        <AutoCompleteTextView
+                            android:id="@+id/searchAutoComplete"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="text"/>
+                            android:inputType="text"
+                            android:completionThreshold="2"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Filtre Butonu -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/filterButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="center_vertical"
+                        app:icon="@drawable/ic_filter_24"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        app:cornerRadius="28dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        app:strokeColor="@color/primary"
+                        app:iconTint="@color/primary"/>
 
                     <!-- Ekleme Butonu -->
                     <com.google.android.material.button.MaterialButton
@@ -111,6 +127,6 @@
         android:textStyle="bold"
         app:cornerRadius="32dp"
         style="@style/Widget.MaterialComponents.Button"
-        app:backgroundTint="@color/secondary"/>
+        app:backgroundTint="@color/primary"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
