@@ -76,6 +76,12 @@ android-app/.cxx/
 Thumbs.db
 desktop.ini
 
+# Microsoft Office temporary files
+~$*.docx
+~$*.xlsx
+~$*.pptx
+*.tmp
+
 # Logs
 *.log
 logs/

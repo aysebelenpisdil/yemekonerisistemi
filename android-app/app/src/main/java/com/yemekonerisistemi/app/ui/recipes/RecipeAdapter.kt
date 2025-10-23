@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.Recipe
 
@@ -28,6 +30,20 @@ class RecipeAdapter(
             calorieText.text = "🔥 ${recipe.calories} kal"
             recommendationReason.text = recipe.recommendationReason
             availableIngredients.text = "Elindekiler: ${recipe.availableIngredients}"
+
+            // Glide ile resim yükleme
+            if (!recipe.imageUrl.isNullOrEmpty()) {
+                Glide.with(itemView.context)
+                    .load(recipe.imageUrl)
+                    .placeholder(R.drawable.ic_kitchen_24) // Loading placeholder
+                    .error(R.drawable.ic_kitchen_24) // Error fallback
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(recipeImage)
+            } else {
+                // Default image
+                recipeImage.setImageResource(R.drawable.ic_kitchen_24)
+            }
 
             // Kart tıklama olayı
             itemView.setOnClickListener {
