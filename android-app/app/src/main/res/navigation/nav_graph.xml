@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/inventoryFragment">
+
+    <!-- Buzdolabım Ekranı -->
+    <fragment
+        android:id="@+id/inventoryFragment"
+        android:name="com.yemekonerisistemi.app.ui.inventory.InventoryFragment"
+        android:label="@string/title_inventory"
+        tools:layout="@layout/fragment_inventory">
+
+        <action
+            android:id="@+id/action_inventory_to_recipeList"
+            app:destination="@id/recipeListFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"/>
+    </fragment>
+
+    <!-- Tarif Listesi Ekranı -->
+    <fragment
+        android:id="@+id/recipeListFragment"
+        android:name="com.yemekonerisistemi.app.ui.recipes.RecipeListFragment"
+        android:label="@string/title_recipes"
+        tools:layout="@layout/fragment_recipe_list">
+
+        <action
+            android:id="@+id/action_recipeList_to_recipeDetail"
+            app:destination="@id/recipeDetailFragment"/>
+    </fragment>
+
+    <!-- Tarif Detay Ekranı -->
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.yemekonerisistemi.app.ui.recipes.RecipeDetailFragment"
+        android:label="Tarif Detayı">
+
+        <argument
+            android:name="recipeId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </fragment>
+
+    <!-- Profil Ekranı -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.yemekonerisistemi.app.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"/>
+
+</navigation>

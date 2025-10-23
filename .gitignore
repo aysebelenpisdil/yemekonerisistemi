@@ -1,0 +1,102 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+ENV/
+env/
+.venv
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data files
+*.csv
+*.json
+*.pkl
+*.h5
+*.db
+*.sqlite
+*.sqlite3
+
+# FAISS indexes
+*.index
+*.faiss
+
+# Environment variables
+.env
+.env.local
+*.env
+
+# Android
+android-app/.gradle/
+android-app/.idea/
+android-app/local.properties
+android-app/build/
+android-app/app/build/
+android-app/*.iml
+android-app/app/*.iml
+android-app/captures/
+android-app/.externalNativeBuild/
+android-app/.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Secrets and credentials
+credentials/
+secrets/
+*.key
+*.pem
+*.crt
+
+# Model files (genellikle büyük)
+models/*.bin
+models/*.pt
+models/*.pth
+models/*.onnx
+
+# Test coverage
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Documentation build
+docs/_build/

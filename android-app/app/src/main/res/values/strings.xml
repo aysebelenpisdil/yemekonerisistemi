@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Uygulama Adı -->
+    <string name="app_name">Yemek Öneri Sistemi</string>
+
+    <!-- Ana Ekran -->
+    <string name="title_inventory">Buzdolabım</string>
+    <string name="title_recipes">Tarifler</string>
+    <string name="title_profile">Profil</string>
+
+    <!-- Buzdolabım Ekranı -->
+    <string name="search_ingredient_hint">Malzeme ara veya ekle</string>
+    <string name="find_recipes_button">TARİFLERİ BUL 🍳</string>
+    <string name="category_vegetables">Sebzeler</string>
+    <string name="category_meat">Et &amp; Tavuk Ürünleri</string>
+    <string name="category_dairy">Süt Ürünleri</string>
+    <string name="category_grains">Temel Gıda</string>
+    <string name="category_spices">Baharatlar</string>
+    <string name="category_fruits">Meyveler</string>
+
+    <!-- Tarif Listesi -->
+    <string name="personalized_recipes_title">Sana Özel Öneriler</string>
+    <string name="recipe_count_format">✨ %d tarif bulundu</string>
+    <string name="why_recommended">💡 Neden önerildi?</string>
+    <string name="available_ingredients">📦 Elindekiler: %s</string>
+    <string name="cooking_time_format">⏱️ %d dk</string>
+    <string name="calorie_format">🔥 %d kal</string>
+
+    <!-- Tarif Detayı -->
+    <string name="servings_format">👥 %d Kişi</string>
+    <string name="ingredients_title">📋 MALZEMELER</string>
+    <string name="instructions_title">👨‍🍳 HAZIRLANIŞI</string>
+    <string name="add_to_shopping_list">Listeye Ekle</string>
+    <string name="why_recommended_detail">💡 NEDEN SANA ÖNERİLDİ?</string>
+    <string name="favorite_added">Favorilere eklendi</string>
+    <string name="favorite_removed">Favorilerden çıkarıldı</string>
+
+    <!-- Genel -->
+    <string name="loading">Yükleniyor...</string>
+    <string name="error_message">Bir hata oluştu. Lütfen tekrar deneyin.</string>
+    <string name="retry">Tekrar Dene</string>
+    <string name="cancel">İptal</string>
+    <string name="ok">Tamam</string>
+    <string name="save">Kaydet</string>
+    <string name="delete">Sil</string>
+    <string name="edit">Düzenle</string>
+    <string name="share">Paylaş</string>
+    <string name="settings">Ayarlar</string>
+
+    <!-- Boş Durum Mesajları -->
+    <string name="empty_inventory">Henüz malzeme eklemediniz.\nYukarıdaki arama kutusunu kullanarak başlayın!</string>
+    <string name="empty_recipes">Tarif bulunamadı.\nFarklı malzemeler deneyin.</string>
+    <string name="no_internet">İnternet bağlantısı yok.\nLütfen bağlantınızı kontrol edin.</string>
+</resources>

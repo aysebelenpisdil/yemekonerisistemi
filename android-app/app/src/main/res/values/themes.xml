@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Temel Material Design 3 Tema -->
+    <style name="Theme.YemekOneri" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Ana Renkler -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+
+        <!-- İkincil Renkler -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+
+        <!-- Üçüncül Renkler -->
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorOnTertiary">@color/on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/on_tertiary_container</item>
+
+        <!-- Arka Plan ve Yüzey -->
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/on_background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+
+        <!-- Hata Renkleri -->
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+        <item name="colorErrorContainer">@color/error_container</item>
+        <item name="colorOnErrorContainer">@color/on_error_container</item>
+
+        <!-- Outline -->
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
+
+        <!-- Durum Çubuğu -->
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+
+        <!-- Typography -->
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.YemekOneri.DisplayLarge</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.YemekOneri.HeadlineLarge</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.YemekOneri.TitleLarge</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.YemekOneri.BodyLarge</item>
+
+        <!-- Shape -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.YemekOneri.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.YemekOneri.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.YemekOneri.LargeComponent</item>
+    </style>
+
+    <!-- AppBar Tema -->
+    <style name="Theme.YemekOneri.AppBarOverlay" parent="ThemeOverlay.Material3.ActionBar">
+        <item name="colorControlNormal">@color/on_primary</item>
+    </style>
+
+    <!-- Popup Tema -->
+    <style name="Theme.YemekOneri.PopupOverlay" parent="ThemeOverlay.Material3.Light" />
+
+    <!-- Typography Stilleri -->
+    <style name="TextAppearance.YemekOneri.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:textSize">57sp</item>
+    </style>
+
+    <style name="TextAppearance.YemekOneri.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">32sp</item>
+    </style>
+
+    <style name="TextAppearance.YemekOneri.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearance.YemekOneri.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Shape Stilleri -->
+    <style name="ShapeAppearance.YemekOneri.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearance.YemekOneri.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.YemekOneri.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- Chip Stilleri -->
+    <style name="Widget.YemekOneri.Chip" parent="Widget.Material3.Chip.Suggestion">
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="chipStrokeColor">@color/chip_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">16dp</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="closeIconVisible">true</item>
+    </style>
+
+    <!-- Button Stilleri -->
+    <style name="Widget.YemekOneri.Button.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/primary</item>
+        <item name="android:textColor">@color/on_primary</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="Widget.YemekOneri.Button.Secondary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/secondary</item>
+        <item name="android:textColor">@color/on_secondary</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <!-- FAB Stilleri -->
+    <style name="Widget.YemekOneri.ExtendedFloatingActionButton" parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
+        <item name="backgroundTint">@color/secondary</item>
+        <item name="tint">@color/on_secondary</item>
+        <item name="android:textColor">@color/on_secondary</item>
+    </style>
+
+    <!-- Card Stilleri -->
+    <style name="Widget.YemekOneri.CardView" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <!-- Dialog Stilleri -->
+    <style name="ThemeOverlay.YemekOneri.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSurface">@color/surface</item>
+    </style>
+
+</resources>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Buzdolabım (Envanter) Ekranı -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".ui.inventory.InventoryFragment">
+
+    <!-- AppBar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.YemekOneri.AppBarOverlay">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Buzdolabım"
+            app:titleTextColor="@color/on_primary"
+            android:background="@color/primary"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Ana İçerik -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Arama ve Ekleme Alanı -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <!-- Arama Alanı -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/searchInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:hint="Malzeme ara veya ekle"
+                        app:startIconDrawable="@drawable/ic_search_24">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/searchEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Ekleme Butonu -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/addButton"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_gravity="center_vertical"
+                        app:icon="@drawable/ic_add_24"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        app:cornerRadius="28dp"
+                        style="@style/Widget.MaterialComponents.Button"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Kategoriler ve Malzemeler -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/categoriesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginBottom="80dp"
+                tools:listitem="@layout/item_category"/>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Alt Buton -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/findRecipesButton"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:text="TARİFLERİ BUL 🍳"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:cornerRadius="32dp"
+        style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/secondary"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
