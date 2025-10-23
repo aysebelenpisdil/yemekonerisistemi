@@ -28,6 +28,7 @@
     <string name="calorie_format">🔥 %d kal</string>
 
     <!-- Tarif Detayı -->
+    <string name="recipe_image_desc">Tarif görseli</string>
     <string name="servings_format">👥 %d Kişi</string>
     <string name="ingredients_title">📋 MALZEMELER</string>
     <string name="instructions_title">👨‍🍳 HAZIRLANIŞI</string>

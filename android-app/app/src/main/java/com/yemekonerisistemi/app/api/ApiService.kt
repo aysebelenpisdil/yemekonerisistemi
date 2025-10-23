@@ -1,8 +1,12 @@
 package com.yemekonerisistemi.app.api
 
 import com.yemekonerisistemi.app.models.Ingredient
+import com.yemekonerisistemi.app.models.Recipe
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -10,6 +14,8 @@ import retrofit2.http.Query
  * Base URL: http://localhost:8000 (geliştirme)
  */
 interface ApiService {
+
+    // ========== INGREDIENTS ==========
 
     /**
      * Malzeme ara
@@ -36,6 +42,36 @@ interface ApiService {
     suspend fun getIngredientByName(
         @Query("name") name: String
     ): Response<Ingredient>
+
+    // ========== RECIPES ==========
+
+    /**
+     * Tarif listesi getir (öneriler)
+     * POST /api/recipes/recommend
+     */
+    @POST("/api/recipes/recommend")
+    suspend fun getRecipeRecommendations(
+        @Body request: RecipeRecommendationRequest
+    ): Response<RecipeRecommendationResponse>
+
+    /**
+     * Tarif ara
+     * GET /api/recipes/search?q=keyword&limit=20
+     */
+    @GET("/api/recipes/search")
+    suspend fun searchRecipes(
+        @Query("q") query: String,
+        @Query("limit") limit: Int = 20
+    ): Response<List<Recipe>>
+
+    /**
+     * Tarif detayı getir
+     * GET /api/recipes/{id}
+     */
+    @GET("/api/recipes/{id}")
+    suspend fun getRecipeById(
+        @Path("id") recipeId: Int
+    ): Response<Recipe>
 }
 
 /**
@@ -59,4 +95,24 @@ data class IngredientDTO(
     val protein_g: Double,
     val sugar_g: Double,
     val fiber_g: Double
+)
+
+/**
+ * Recipe Recommendation Request
+ */
+data class RecipeRecommendationRequest(
+    val ingredients: List<String>,
+    val dietary_preferences: List<String>? = null,
+    val max_cooking_time: Int? = null,
+    val max_calories: Int? = null,
+    val limit: Int = 20
+)
+
+/**
+ * Recipe Recommendation Response
+ */
+data class RecipeRecommendationResponse(
+    val recipes: List<Recipe>,
+    val total: Int,
+    val matched_ingredients: List<String>
 )

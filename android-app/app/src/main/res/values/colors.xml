@@ -52,6 +52,7 @@
     <color name="on_error_container">#8B0000</color>    <!-- Koyu Kırmızı -->
 
     <color name="success">#27AE60</color>               <!-- Yeşil -->
+    <color name="success_light">#D5F5E3</color>         <!-- Açık Yeşil -->
     <color name="warning">#F39C12</color>               <!-- Turuncu -->
     <color name="info">#3498DB</color>                  <!-- Bilgi Mavisi -->
 
