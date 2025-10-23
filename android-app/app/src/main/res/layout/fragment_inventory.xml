@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 app:cardElevation="2dp"
                 app:cardCornerRadius="12dp"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                     android:orientation="horizontal"
                     android:padding="8dp">
 
-                    <!-- Arama Alanı (AutoCompleteTextView) -->
+                    <!-- Arama Alanı (EditText) -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/searchInputLayout"
                         android:layout_width="0dp"
@@ -63,13 +63,13 @@
                         app:startIconDrawable="@drawable/ic_search_24"
                         app:endIconMode="clear_text">
 
-                        <AutoCompleteTextView
-                            android:id="@+id/searchAutoComplete"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/searchEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:completionThreshold="2"
-                            android:dropDownAnchor="@id/searchInputLayout"/>
+                            android:maxLines="1"
+                            android:imeOptions="actionSearch"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -102,6 +102,25 @@
                         style="@style/Widget.MaterialComponents.Button"/>
 
                 </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Arama Önerileri (Trendyol-style) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/suggestionsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="12dp"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/suggestionsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="300dp"
+                    android:scrollbars="vertical"/>
 
             </com.google.android.material.card.MaterialCardView>
 
