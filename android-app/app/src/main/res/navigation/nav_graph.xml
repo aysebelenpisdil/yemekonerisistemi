@@ -3,7 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/inventoryFragment">
+    app:startDestination="@id/homeFragment">
+
+    <!-- Ana Sayfa / Dashboard -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.yemekonerisistemi.app.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home"/>
 
     <!-- Buzdolabım Ekranı -->
     <fragment

@@ -4,6 +4,7 @@
     <string name="app_name">Yemek Öneri Sistemi</string>
 
     <!-- Ana Ekran -->
+    <string name="title_home">Ana Sayfa</string>
     <string name="title_inventory">Buzdolabım</string>
     <string name="title_recipes">Tarifler</string>
     <string name="title_profile">Profil</string>
@@ -51,4 +52,20 @@
     <string name="empty_inventory">Henüz malzeme eklemediniz.\nYukarıdaki arama kutusunu kullanarak başlayın!</string>
     <string name="empty_recipes">Tarif bulunamadı.\nFarklı malzemeler deneyin.</string>
     <string name="no_internet">İnternet bağlantısı yok.\nLütfen bağlantınızı kontrol edin.</string>
+
+    <!-- Ana Sayfa (Home/Dashboard) -->
+    <string name="home_greeting">Merhaba! 👋</string>
+    <string name="home_personalized_for_you">Sana Özel Öneriler</string>
+    <string name="home_quick_actions">Hızlı Erişim</string>
+    <string name="home_my_inventory">Envanterim</string>
+    <string name="home_find_recipes">Tarif Bul</string>
+    <string name="home_meal_planner">Yemek Planla</string>
+    <string name="home_shopping_list">Alışveriş Listesi</string>
+    <string name="home_based_on_inventory">Envanterindeki malzemelere göre</string>
+    <string name="home_trending_recipes">Popüler Tarifler</string>
+    <string name="home_recent_recipes">Son Baktıkların</string>
+    <string name="home_see_all">Tümünü Gör</string>
+    <string name="home_ingredients_available">%d malzemen var</string>
+    <string name="home_recipes_found">%d tarif bulundu</string>
+    <string name="home_empty_inventory">Envanterinde henüz malzeme yok.\nHemen ekle!</string>
 </resources>
