@@ -17,9 +17,11 @@ import com.google.android.material.textfield.TextInputEditText
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.api.RetrofitClient
 import com.yemekonerisistemi.app.models.InventoryItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Envanter (Buzdolabı) Fragment
@@ -169,9 +171,12 @@ class InventoryFragment : Fragment() {
                     try {
                         android.util.Log.d("InventoryFragment", "🔍 Fuzzy search: '$query'")
 
-                        // Backend'den fuzzy search ile ara
-                        val response = RetrofitClient.apiService.searchIngredients(query, 20)
+                        // Backend'den fuzzy search ile ara (IO thread'de)
+                        val response = withContext(Dispatchers.IO) {
+                            RetrofitClient.apiService.searchIngredients(query, 20)
+                        }
 
+                        // Burası otomatik olarak Main thread'e döner
                         android.util.Log.d("InventoryFragment", "📡 Response: ${response.code()}")
 
                         if (response.isSuccessful && response.body() != null) {
@@ -180,7 +185,7 @@ class InventoryFragment : Fragment() {
 
                             android.util.Log.d("InventoryFragment", "✅ ${ingredientNames.size} sonuç: $ingredientNames")
 
-                            // UI güncelle (main thread'de)
+                            // UI güncelle (zaten Main thread'deyiz)
                             if (ingredientNames.isNotEmpty()) {
                                 showSuggestions(ingredientNames)
                             } else {
@@ -194,14 +199,12 @@ class InventoryFragment : Fragment() {
                         android.util.Log.e("InventoryFragment", "💥 Search error: ${e.message}", e)
                         e.printStackTrace()
 
-                        // UI thread'de hata göster
-                        activity?.runOnUiThread {
-                            Toast.makeText(
-                                context,
-                                "Backend'e bağlanılamıyor. Lütfen backend'in çalıştığından emin olun.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        // Zaten Main thread'deyiz, direkt Toast göster
+                        Toast.makeText(
+                            context,
+                            "Backend hatası: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
                         hideSuggestions()
                     }
                 }
@@ -217,21 +220,17 @@ class InventoryFragment : Fragment() {
      * Önerileri göster
      */
     private fun showSuggestions(suggestions: List<String>) {
-        activity?.runOnUiThread {
-            suggestionAdapter.updateSuggestions(suggestions)
-            suggestionsCard.visibility = View.VISIBLE
-            android.util.Log.d("InventoryFragment", "📋 Suggestions shown: ${suggestions.size} items")
-        }
+        suggestionAdapter.updateSuggestions(suggestions)
+        suggestionsCard.visibility = View.VISIBLE
+        android.util.Log.d("InventoryFragment", "📋 Suggestions shown: ${suggestions.size} items")
     }
 
     /**
      * Önerileri gizle
      */
     private fun hideSuggestions() {
-        activity?.runOnUiThread {
-            suggestionsCard.visibility = View.GONE
-            suggestionAdapter.clearSuggestions()
-        }
+        suggestionsCard.visibility = View.GONE
+        suggestionAdapter.clearSuggestions()
     }
 
 
