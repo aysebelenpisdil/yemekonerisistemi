@@ -142,6 +142,10 @@ class InventoryFragment : Fragment() {
     private fun setupRealTimeSearch() {
         var searchJob: kotlinx.coroutines.Job? = null
 
+        // Dropdown boyutlarını ayarla (Material TextInputLayout uyumluluğu için)
+        searchAutoComplete.dropDownHeight = android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        searchAutoComplete.dropDownWidth = searchAutoComplete.width
+
         searchAutoComplete.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -181,9 +185,19 @@ class InventoryFragment : Fragment() {
                                     )
                                     searchAutoComplete.setAdapter(adapter)
 
+                                    // Debug: Kullanıcıya göster
+                                    Toast.makeText(
+                                        context,
+                                        "✓ ${ingredientNames.size} sonuç bulundu",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
                                     // Dropdown'ı göster
                                     if (ingredientNames.isNotEmpty()) {
-                                        searchAutoComplete.showDropDown()
+                                        searchAutoComplete.post {
+                                            searchAutoComplete.showDropDown()
+                                        }
+                                        android.util.Log.d("InventoryFragment", "📋 Dropdown gösterildi")
                                     }
                                 }
                             } else {

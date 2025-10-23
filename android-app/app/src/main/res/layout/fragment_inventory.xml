@@ -60,14 +60,16 @@
                         android:layout_weight="1"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:hint="Malzeme ara veya ekle"
-                        app:startIconDrawable="@drawable/ic_search_24">
+                        app:startIconDrawable="@drawable/ic_search_24"
+                        app:endIconMode="clear_text">
 
                         <AutoCompleteTextView
                             android:id="@+id/searchAutoComplete"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:completionThreshold="2"/>
+                            android:completionThreshold="2"
+                            android:dropDownAnchor="@id/searchInputLayout"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
