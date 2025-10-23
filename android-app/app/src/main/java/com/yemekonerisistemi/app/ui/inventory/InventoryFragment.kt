@@ -61,8 +61,8 @@ class InventoryFragment : Fragment() {
         // RecyclerView kurulumu
         setupRecyclerView()
 
-        // Backend'den malzeme isimlerini yükle
-        loadIngredientNames()
+        // Real-time fuzzy search'ü hemen aktif et
+        setupRealTimeSearch()
 
         // Filtre butonu
         filterButton.setOnClickListener {
@@ -116,7 +116,8 @@ class InventoryFragment : Fragment() {
     }
 
     /**
-     * Backend'den tüm malzeme isimlerini yükle (autocomplete için)
+     * Backend'den tüm malzeme isimlerini yükle (opsiyonel - fallback için)
+     * Not: setupRealTimeSearch() zaten canlı backend araması yapıyor
      */
     private fun loadIngredientNames() {
         lifecycleScope.launch {
@@ -124,22 +125,12 @@ class InventoryFragment : Fragment() {
                 val response = RetrofitClient.apiService.getIngredientNames()
                 if (response.isSuccessful && response.body() != null) {
                     allIngredientNames = response.body()!!
-                    setupRealTimeSearch()
+                    android.util.Log.d("InventoryFragment", "✅ ${allIngredientNames.size} malzeme ismi yüklendi")
                 } else {
-                    Toast.makeText(
-                        context,
-                        "Malzemeler yüklenemedi: ${response.code()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    android.util.Log.e("InventoryFragment", "❌ Malzeme isimleri yüklenemedi: ${response.code()}")
                 }
             } catch (e: Exception) {
-                Toast.makeText(
-                    context,
-                    "Backend'e bağlanılamıyor. Backend'in çalıştığından emin olun.",
-                    Toast.LENGTH_LONG
-                ).show()
-                // Offline fallback - demo isimleri
-                setupAutoCompleteFallback()
+                android.util.Log.e("InventoryFragment", "💥 Malzeme isimleri yükleme hatası: ${e.message}")
             }
         }
     }
@@ -168,27 +159,49 @@ class InventoryFragment : Fragment() {
                         kotlinx.coroutines.delay(300)
 
                         try {
+                            android.util.Log.d("InventoryFragment", "🔍 Fuzzy search başlatıldı: '$query'")
+
                             // Backend'den fuzzy search ile ara
                             val response = RetrofitClient.apiService.searchIngredients(query, 20)
+
+                            android.util.Log.d("InventoryFragment", "📡 API Response: ${response.code()}")
+
                             if (response.isSuccessful && response.body() != null) {
                                 val results = response.body()!!.results
                                 val ingredientNames = results.map { it.name }
 
-                                // AutoComplete adapter'ı güncelle
-                                val adapter = ArrayAdapter(
-                                    requireContext(),
-                                    android.R.layout.simple_dropdown_item_1line,
-                                    ingredientNames
-                                )
-                                searchAutoComplete.setAdapter(adapter)
+                                android.util.Log.d("InventoryFragment", "✅ ${ingredientNames.size} sonuç bulundu: ${ingredientNames.take(5)}")
 
-                                // Dropdown'ı göster
-                                if (ingredientNames.isNotEmpty()) {
-                                    searchAutoComplete.showDropDown()
+                                // UI thread'de adapter güncelle
+                                activity?.runOnUiThread {
+                                    val adapter = ArrayAdapter(
+                                        requireContext(),
+                                        android.R.layout.simple_dropdown_item_1line,
+                                        ingredientNames
+                                    )
+                                    searchAutoComplete.setAdapter(adapter)
+
+                                    // Dropdown'ı göster
+                                    if (ingredientNames.isNotEmpty()) {
+                                        searchAutoComplete.showDropDown()
+                                    }
                                 }
+                            } else {
+                                android.util.Log.e("InventoryFragment", "❌ API hatası: ${response.code()} - ${response.message()}")
+                                Toast.makeText(context, "Arama başarısız: ${response.code()}", Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: Exception) {
-                            // Network hatası - sessizce devam et
+                            android.util.Log.e("InventoryFragment", "💥 Exception: ${e.message}", e)
+                            e.printStackTrace()
+
+                            // Kullanıcıya göster (debug için)
+                            activity?.runOnUiThread {
+                                Toast.makeText(
+                                    context,
+                                    "Backend'e bağlanılamıyor: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }
@@ -197,6 +210,8 @@ class InventoryFragment : Fragment() {
 
         // İlk threshold ayarı
         searchAutoComplete.threshold = 2
+
+        android.util.Log.d("InventoryFragment", "🚀 Real-time fuzzy search aktif edildi!")
     }
 
     /**
