@@ -7,8 +7,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-# API router'ları import edilecek
-# from api import recipes, users, inventory
+# API router'ları import et
+from api import ingredients
 
 app = FastAPI(
     title="Yemek Öneri Sistemi API",
@@ -38,9 +38,7 @@ async def health_check():
     return {"status": "healthy"}
 
 # Router'ları ekle
-# app.include_router(recipes.router, prefix="/api/recipes", tags=["recipes"])
-# app.include_router(users.router, prefix="/api/users", tags=["users"])
-# app.include_router(inventory.router, prefix="/api/inventory", tags=["inventory"])
+app.include_router(ingredients.router, prefix="/api/ingredients", tags=["ingredients"])
 
 if __name__ == "__main__":
     uvicorn.run(

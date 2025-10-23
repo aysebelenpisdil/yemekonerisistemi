@@ -15,7 +15,7 @@ torch==2.1.0
 
 # Database
 sqlalchemy==2.0.23
-sqlite3  # built-in
+# sqlite3 is built-in to Python
 
 # API & Utilities
 python-multipart==0.0.6
