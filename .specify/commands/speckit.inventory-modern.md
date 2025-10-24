@@ -1,55 +1,42 @@
-# Modern Buzdolabı Ekranı - Implementation Planı
+# Inventory (Buzdolabı) Ekranı — UI Planı (YOS Calm Theme)
 
-## 🎨 FAZ 1: Design System & Renk Teması (1 gün)
+## 🎨 FAZ 1: Design System & Renk Teması (0.5 gün)
 
 ### 1.1 Renk Paleti Tanımlama
-**Dosya:** `res/values/colors.xml`
+**Dosya:** `app/src/main/res/values/colors_yos.xml`
 
 ```xml
-<!-- Modern Beyaz-Krem-Mavi Paleti -->
-<color name="primary">#4A90E2</color>           <!-- Modern Mavi -->
-<color name="primary_dark">#357ABD</color>       <!-- Koyu Mavi -->
-<color name="primary_light">#5DADE2</color>      <!-- Açık Mavi -->
-
-<color name="secondary">#F5F5DC</color>          <!-- Krem/Bej -->
-<color name="secondary_variant">#FAF8F3</color>  <!-- Açık Krem -->
-
-<color name="background">#FFFFFF</color>         <!-- Beyaz -->
-<color name="surface">#F8F9FA</color>           <!-- Açık Gri Yüzey -->
-
-<color name="text_primary">#2C3E50</color>      <!-- Koyu Gri -->
-<color name="text_secondary">#7F8C8D</color>    <!-- Orta Gri -->
-<color name="text_hint">#BDC3C7</color>         <!-- Açık Gri -->
-
-<color name="divider">#E0E0E0</color>           <!-- Ayırıcı Çizgi -->
-<color name="card_border">#ECEFF1</color>       <!-- Card Kenar -->
-
-<color name="success">#27AE60</color>           <!-- Yeşil -->
-<color name="warning">#F39C12</color>           <!-- Turuncu -->
-<color name="error">#E74C3C</color>             <!-- Kırmızı -->
+<!-- YOS Calm Theme’den örnekler (tam palet dosyada) -->
+<color name="yos_brand_500">#5A80EB</color>
+<color name="yos_brand_700">#384FB2</color>
+<color name="yos_accent_500">#5AC8C1</color>
+<color name="yos_background">#FAFBFE</color>
+<color name="yos_surface_elevated">#F8F9FC</color>
+<color name="yos_text_primary">#1A1E2E</color>
+<color name="yos_text_secondary">#4A5568</color>
 ```
 
 ### 1.2 Tipografi Stilleri
-**Dosya:** `res/values/styles.xml`
+**Dosya:** `app/src/main/res/values/styles_yos.xml`
 
 ```xml
-<!-- Başlıklar -->
-<style name="TextAppearance.App.Headline1">
+<!-- Başlıklar (YOS) -->
+<style name="TextAppearance.YOS.H1">
     <item name="android:textSize">24sp</item>
     <item name="android:textStyle">bold</item>
     <item name="android:textColor">@color/text_primary</item>
     <item name="fontFamily">@font/roboto_bold</item>
 </style>
 
-<!-- Gövde Metinler -->
-<style name="TextAppearance.App.Body1">
+<!-- Gövde Metinler (YOS) -->
+<style name="TextAppearance.YOS.Body">
     <item name="android:textSize">16sp</item>
     <item name="android:textColor">@color/text_primary</item>
     <item name="fontFamily">@font/roboto_regular</item>
 </style>
 
-<!-- Açıklamalar -->
-<style name="TextAppearance.App.Caption">
+<!-- Açıklamalar (YOS) -->
+<style name="TextAppearance.YOS.Caption">
     <item name="android:textSize">12sp</item>
     <item name="android:textColor">@color/text_secondary</item>
     <item name="fontFamily">@font/roboto_light</item>
@@ -58,65 +45,26 @@
 
 ### 1.3 Card Stilleri
 ```xml
-<style name="CardView.Modern">
-    <item name="cardCornerRadius">12dp</item>
-    <item name="cardElevation">2dp</item>
-    <item name="cardBackgroundColor">@color/background</item>
-    <item name="contentPadding">16dp</item>
+<style name="Widget.YOS.Card.Recipe" parent="Widget.MaterialComponents.CardView">
+    <item name="cardCornerRadius">16dp</item>
+    <item name="cardElevation">4dp</item>
+    <item name="cardBackgroundColor">@color/yos_surface_elevated</item>
+    <item name="contentPadding">0dp</item>
+    <item name="android:clickable">true</item>
+    <item name="android:focusable">true</item>
 </style>
 ```
 
 ---
 
-## 🏷️ FAZ 2: NLP Kategorizasyon Sistemi (2 gün)
+## 🏷️ FAZ 2: Arama & Filtre UI (1 gün)
 
-### 2.1 Backend: Kategori Algoritması
-**Yeni Endpoint:**
-```python
-# backend/category_classifier.py
-class IngredientCategorizer:
-    """467 malzemeyi 12 kategoriye ayır"""
+UI odaklı; backend değişikliği yapmadan mevcut arama/fuzzy altyapısını kullan.
 
-    CATEGORIES = {
-        "vegetables": ["domates", "biber", "salatalık", "patlıcan", "kabak"],
-        "fruits": ["elma", "armut", "muz", "portakal", "üzüm"],
-        "meat_poultry": ["tavuk", "hindi", "kıyma", "dana", "kuzu"],
-        "fish_seafood": ["balık", "somon", "levrek", "karides", "midye"],
-        "dairy": ["süt", "yoğurt", "peynir", "tereyağı", "krema"],
-        "grains_legumes": ["pirinç", "makarna", "nohut", "mercimek", "fasulye"],
-        "nuts": ["fındık", "badem", "ceviz", "fıstık"],
-        "spices_sauces": ["tuz", "biber", "kekik", "ketçap", "sos"],
-        "beverages": ["su", "çay", "kahve", "meyve suyu"],
-        "bakery": ["ekmek", "pasta", "börek", "tatlı"],
-        "sweets": ["bal", "reçel", "çikolata", "şeker"],
-        "other": []
-    }
-```
-
-**API Endpoint:**
-```
-GET /api/ingredients/?category=vegetables
-GET /api/ingredients/categories/  # Tüm kategorileri listele
-```
-
-### 2.2 Android: Kategori Model
-```kotlin
-// models/IngredientCategory.kt
-enum class IngredientCategory(val displayName: String, val color: String, val icon: String) {
-    VEGETABLES("Sebzeler", "#27AE60", "🥬"),
-    FRUITS("Meyveler", "#E67E22", "🍎"),
-    MEAT_POULTRY("Et & Tavuk", "#C0392B", "🍗"),
-    FISH_SEAFOOD("Balık & Deniz Ürünleri", "#3498DB", "🐟"),
-    DAIRY("Süt Ürünleri", "#5DADE2", "🥛"),
-    GRAINS_LEGUMES("Tahıllar & Bakliyat", "#D4A373", "🌾"),
-    NUTS("Kuruyemişler", "#8E44AD", "🥜"),
-    SPICES_SAUCES("Baharatlar & Soslar", "#16A085", "🧂"),
-    BEVERAGES("İçecekler", "#1ABC9C", "🍹"),
-    BAKERY("Fırın Ürünleri", "#F39C12", "🍞"),
-    SWEETS("Tatlı & Şekerlemeler", "#E91E63", "🍯"),
-    OTHER("Diğer", "#95A5A6", "🌿")
-}
-```
+Arayüz:
+- Toolbar: başlık + arama ikonu + filtre ikonu + sıralama ikonu
+- Arama kartı: `Widget.YOS.SearchBar`
+- Aktif filtreler: `Widget.YOS.Chip.*`
 
 ### 2.3 Ingredient Data Class Güncelleme
 ```kotlin
@@ -131,7 +79,7 @@ data class Ingredient(
 
 ---
 
-## 🔍 FAZ 3: Gelişmiş Arama & Filtreleme (2 gün)
+## 🔍 FAZ 3: Listeleme ve Kartlar (1 gün)
 
 ### 3.1 Akıllı Arama UI (Trendyol Benzeri)
 **Layout Güncelleme:**
@@ -146,14 +94,11 @@ data class Ingredient(
 </MaterialCardView>
 ```
 
-**Arama Özellikleri:**
-- Material Design 3 SearchView
-- Real-time autocomplete (467 malzeme)
-- Fuzzy matching (typo tolerance)
-- Search history chip'leri
-- Clear button + close icon
+Kart Düzeni:
+- `Widget.YOS.Card.Recipe` ile modern kart görünümü
+- Sol: görsel/ikon; Orta: ad + kategori chip; Sağ: miktar kontrolleri
 
-### 3.2 Filtre Bottom Sheet (Trendyol Benzeri)
+### 3.2 Filtre Bottom Sheet
 **UI Tasarımı:**
 ```
 ┌─────────────────────────────────┐
@@ -206,7 +151,7 @@ data class Ingredient(
 
 ---
 
-## 🎛️ FAZ 4: Sıralama Sistemi (1 gün)
+## 🎛️ FAZ 4: Sıralama Sistemi (0.5 gün)
 
 ### 3.1 Filtre Bottom Sheet
 **Tasarım:**
@@ -261,7 +206,7 @@ data class Ingredient(
 
 ---
 
-## 📏 FAZ 4: Akıllı Birim Sistemi (1 gün)
+## 📏 FAZ 5: Akıllı Birim Sistemi (opsiyonel)
 
 ### 4.1 Birim Enum Sınıfı
 ```kotlin
@@ -305,7 +250,7 @@ fun suggestUnit(ingredientName: String): IngredientUnit {
 
 ---
 
-## 🎴 FAZ 5: Modern Malzeme Kartları (2 gün)
+## 🎴 FAZ 6: Modern Malzeme Kartları (entegrasyon)
 
 ### 5.1 Yeni Card Layout
 ```xml
@@ -354,7 +299,7 @@ val categoryColors = mapOf(
 
 ---
 
-## 📊 FAZ 6: Kategori Bazlı Gruplama (1 gün)
+## 📊 FAZ 7: Kategori Bazlı Gruplama (opsiyonel)
 
 ### 6.1 Grouped RecyclerView
 ```kotlin
@@ -375,7 +320,7 @@ Section 2: 🍗 Et & Tavuk (3 ürün)
 
 ---
 
-## ✨ FAZ 7: Animasyonlar & Mikro-İnteraksiyonlar (1 gün)
+## ✨ FAZ 8: Animasyonlar & Mikro-İnteraksiyonlar (opsiyonel)
 
 ### 7.1 Enter/Exit Animasyonlar
 ```kotlin
@@ -404,7 +349,7 @@ Section 2: 🍗 Et & Tavuk (3 ürün)
 
 ---
 
-## 🧪 FAZ 8: Testing & Polish (1 gün)
+## 🧪 FAZ 9: Testing & Polish (0.5 gün)
 
 ### 8.1 Unit Tests
 ```kotlin
@@ -429,7 +374,7 @@ Section 2: 🍗 Et & Tavuk (3 ürün)
 
 ---
 
-## 📅 Toplam Tahmini Süre: 8-10 İş Günü
+## 📅 Toplam Tahmini Süre: 3–4 İş Günü (UI odaklı faz)
 
 ### Sprint Planı:
 - **Sprint 1 (Gün 1-3):** Design System + Arama
@@ -443,8 +388,7 @@ Section 2: 🍗 Et & Tavuk (3 ürün)
 
 ✅ Beyaz-krem-mavi renk teması uygulanmış
 ✅ Online alışveriş deneyimi sağlanmış
-✅ Gelişmiş arama çalışıyor (NLP/ML)
-✅ Filtreleme sistemi aktif
+✅ Arama ve filtreleme UI’si aktif (mevcut backend ile)
 ✅ A-Z sıralama ve diğer seçenekler çalışıyor
 ✅ Akıllı birim sistemi çalışıyor
 ✅ Modern card tasarımları uygulanmış
