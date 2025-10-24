@@ -19,7 +19,22 @@ async def search_ingredients(
     - **q**: Arama sorgusu (opsiyonel)
     - **limit**: Maksimum sonuç sayısı
     """
+    print("\n" + "="*80)
+    print("🔍 INGREDIENTS API ÇAĞRILDI!")
+    print("="*80)
+    print(f"📝 Query: {q}")
+    print(f"📊 Limit: {limit}")
+    print(f"🌐 Endpoint: /api/ingredients/")
+
     results = ingredient_service.search_ingredients(q, limit)
+
+    print(f"✅ Sonuç sayısı: {len(results)}")
+    if results:
+        print(f"📋 İlk 3 sonuç: {[r.name for r in results[:3]]}")
+    else:
+        print("❌ Hiç sonuç bulunamadı!")
+    print("="*80 + "\n")
+
     return IngredientSearchResponse(
         results=results,
         total=len(results),

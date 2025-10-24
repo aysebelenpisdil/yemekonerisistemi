@@ -6,42 +6,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/yos_background"
     tools:context=".ui.recipes.RecipeListFragment">
 
     <!-- AppBar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/yos_surface_base">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/yos_surface_base">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@color/primary">
+                android:background="@color/yos_surface_elevated">
 
                 <TextView
+                    style="@style/TextAppearance.YOS.Display"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sana Özel Öneriler"
-                    android:textColor="@color/on_primary"
-                    android:textSize="28sp"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/yos_text_primary"/>
 
                 <TextView
                     android:id="@+id/recipeCountText"
+                    style="@style/TextAppearance.YOS.Body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="✨ 12 tarif bulundu"
-                    android:textColor="@color/on_primary"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/yos_text_secondary"/>
 
             </LinearLayout>
 
@@ -65,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/yos_brand_500"
         android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

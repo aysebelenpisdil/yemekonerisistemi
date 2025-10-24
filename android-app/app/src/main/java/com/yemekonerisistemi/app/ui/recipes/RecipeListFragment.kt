@@ -27,7 +27,7 @@ class RecipeListFragment : Fragment() {
 
     private lateinit var recipesRecyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private lateinit var emptyStateLayout: View
+    private var emptyStateLayout: View? = null
     private lateinit var recipeAdapter: RecipeAdapter
 
     private val recipes = mutableListOf<Recipe>()
@@ -46,7 +46,8 @@ class RecipeListFragment : Fragment() {
         // View'ları bağla
         recipesRecyclerView = view.findViewById(R.id.recipesRecyclerView)
         progressBar = view.findViewById(R.id.progressBar)
-        emptyStateLayout = view.findViewById(R.id.emptyStateLayout)
+        // emptyStateLayout şu anda layout'ta yok, null bırakıyoruz
+        // emptyStateLayout = view.findViewById<View?>(R.id.emptyStateLayout)
 
         // RecyclerView kurulumu
         setupRecyclerView()
@@ -186,7 +187,7 @@ class RecipeListFragment : Fragment() {
     }
 
     private fun showEmptyState(isEmpty: Boolean) {
-        emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+        emptyStateLayout?.visibility = if (isEmpty) View.VISIBLE else View.GONE
         recipesRecyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 

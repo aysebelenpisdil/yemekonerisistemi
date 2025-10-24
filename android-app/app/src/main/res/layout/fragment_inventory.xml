@@ -6,22 +6,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/yos_background"
     tools:context=".ui.inventory.InventoryFragment">
 
     <!-- AppBar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.YemekOneri.AppBarOverlay">
+        android:background="@color/yos_surface_base">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Buzdolabım"
-            app:titleTextColor="@color/on_primary"
-            android:background="@color/primary"/>
+            app:titleTextColor="@color/yos_text_primary"
+            app:navigationIconTint="@color/yos_text_primary"
+            app:subtitleTextColor="@color/yos_text_secondary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,10 +41,9 @@
 
             <!-- Arama ve Ekleme Alanı -->
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.SearchBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp"
                 android:layout_marginBottom="8dp">
 
                 <LinearLayout
@@ -58,10 +58,12 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/Widget.YOS.TextInputLayout"
                         android:hint="Malzeme ara veya ekle"
                         app:startIconDrawable="@drawable/ic_search_24"
-                        app:endIconMode="clear_text">
+                        app:endIconMode="clear_text"
+                        app:boxStrokeColor="@color/yos_brand_500"
+                        app:hintTextColor="@color/yos_text_secondary">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/searchEditText"
@@ -76,6 +78,7 @@
                     <!-- Filtre Butonu -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/filterButton"
+                        style="@style/Widget.YOS.Button.Icon.Outlined"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_marginStart="8dp"
@@ -84,13 +87,13 @@
                         app:iconGravity="textStart"
                         app:iconPadding="0dp"
                         app:cornerRadius="28dp"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        app:strokeColor="@color/primary"
-                        app:iconTint="@color/primary"/>
+                        app:strokeColor="@color/yos_brand_500"
+                        app:iconTint="@color/yos_brand_500"/>
 
                     <!-- Ekleme Butonu -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/addButton"
+                        style="@style/Widget.YOS.Button.Icon"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_marginStart="8dp"
@@ -99,7 +102,7 @@
                         app:iconGravity="textStart"
                         app:iconPadding="0dp"
                         app:cornerRadius="28dp"
-                        style="@style/Widget.MaterialComponents.Button"/>
+                        app:backgroundTint="@color/yos_accent_500"/>
 
                 </LinearLayout>
 
@@ -108,11 +111,10 @@
             <!-- Arama Önerileri (Trendyol-style) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/suggestionsCard"
+                style="@style/Widget.YOS.Card.Recipe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
                 android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -139,6 +141,7 @@
     <!-- Alt Buton -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/findRecipesButton"
+        style="@style/Widget.YOS.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_gravity="bottom"
@@ -146,8 +149,6 @@
         android:text="TARİFLERİ BUL 🍳"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:cornerRadius="32dp"
-        style="@style/Widget.MaterialComponents.Button"
-        app:backgroundTint="@color/primary"/>
+        app:cornerRadius="32dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -6,21 +6,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/yos_background"
     tools:context=".ui.home.HomeFragment">
 
     <!-- AppBar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary">
+        android:background="@color/yos_surface_base">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/home_greeting"
-            app:titleTextColor="@color/on_primary"/>
+            app:titleTextColor="@color/yos_text_primary"
+            app:navigationIconTint="@color/yos_text_primary"
+            app:subtitleTextColor="@color/yos_text_secondary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -40,12 +42,10 @@
             <!-- Envanter Özeti Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/inventorySummaryCard"
+                style="@style/Widget.YOS.Card.Recipe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="16dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/secondary">
+                android:layout_marginBottom="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -55,33 +55,28 @@
 
                     <TextView
                         android:id="@+id/inventoryTitleText"
+                        style="@style/TextAppearance.YOS.H2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/home_my_inventory"
-                        android:textColor="@color/on_secondary"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:textColor="@color/yos_text_primary"/>
 
                     <TextView
                         android:id="@+id/inventoryCountText"
+                        style="@style/TextAppearance.YOS.Display"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         tools:text="12 malzemen var"
-                        android:textColor="@color/on_secondary"
-                        android:textSize="24sp"
-                        android:textStyle="bold"/>
+                        android:textColor="@color/yos_text_primary"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/manageInventoryButton"
+                        style="@style/Widget.YOS.Button.Primary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Yönet"
-                        android:textColor="@color/secondary"
-                        app:backgroundTint="@color/on_secondary"
-                        app:cornerRadius="20dp"
-                        style="@style/Widget.MaterialComponents.Button"/>
+                        android:text="Yönet"/>
 
                 </LinearLayout>
 
@@ -89,11 +84,11 @@
 
             <!-- Hızlı Erişim Butonları -->
             <TextView
+                style="@style/TextAppearance.YOS.H2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_quick_actions"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                android:textColor="@color/yos_text_primary"
                 android:layout_marginBottom="12dp"/>
 
             <LinearLayout
@@ -106,12 +101,11 @@
                 <!-- Tarif Bul -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/findRecipesCard"
+                    style="@style/Widget.YOS.Card.Recipe"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="12dp">
+                    android:layout_marginEnd="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -127,12 +121,13 @@
                             android:textSize="32sp"/>
 
                         <TextView
+                            style="@style/TextAppearance.YOS.Body"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/home_find_recipes"
-                            android:textSize="14sp"
                             android:textStyle="bold"
+                            android:textColor="@color/yos_text_primary"
                             android:gravity="center"/>
 
                     </LinearLayout>
@@ -163,12 +158,13 @@
                             android:textSize="32sp"/>
 
                         <TextView
+                            style="@style/TextAppearance.YOS.Body"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/home_meal_planner"
-                            android:textSize="14sp"
                             android:textStyle="bold"
+                            android:textColor="@color/yos_text_primary"
                             android:gravity="center"/>
 
                     </LinearLayout>
@@ -198,12 +194,13 @@
                             android:textSize="32sp"/>
 
                         <TextView
+                            style="@style/TextAppearance.YOS.Body"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/home_shopping_list"
-                            android:textSize="14sp"
                             android:textStyle="bold"
+                            android:textColor="@color/yos_text_primary"
                             android:gravity="center"/>
 
                     </LinearLayout>
@@ -220,29 +217,30 @@
                 android:layout_marginBottom="12dp">
 
                 <TextView
+                    style="@style/TextAppearance.YOS.H2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/home_personalized_for_you"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/yos_text_primary"/>
 
                 <TextView
                     android:id="@+id/seeAllRecommendations"
+                    style="@style/TextAppearance.YOS.Body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/home_see_all"
-                    android:textColor="@color/primary"
+                    android:textColor="@color/yos_brand_500"
                     android:textStyle="bold"/>
 
             </LinearLayout>
 
             <TextView
+                style="@style/TextAppearance.YOS.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_based_on_inventory"
-                android:textSize="14sp"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@color/yos_text_secondary"
                 android:layout_marginBottom="12dp"/>
 
             <!-- Önerilen Tarifler RecyclerView -->
@@ -262,19 +260,20 @@
                 android:layout_marginBottom="12dp">
 
                 <TextView
+                    style="@style/TextAppearance.YOS.H2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/home_trending_recipes"
-                    android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/yos_text_primary"/>
 
                 <TextView
                     android:id="@+id/seeAllTrending"
+                    style="@style/TextAppearance.YOS.Body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/home_see_all"
-                    android:textColor="@color/primary"
+                    android:textColor="@color/yos_brand_500"
                     android:textStyle="bold"/>
 
             </LinearLayout>

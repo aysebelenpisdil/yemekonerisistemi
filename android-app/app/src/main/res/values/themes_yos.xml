@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 🎯 YÖS Ana Tema - Material 3 Tabanlı -->
+    <!-- Product Strategy: Clean, Modern, Engaging UI -->
+
+    <style name="Theme.YOS" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary Brand Colors -->
+        <item name="colorPrimary">@color/yos_brand_500</item>
+        <item name="colorPrimaryVariant">@color/yos_brand_700</item>
+        <item name="colorOnPrimary">@color/yos_text_inverse</item>
+
+        <!-- Secondary/Accent Colors -->
+        <item name="colorSecondary">@color/yos_accent_500</item>
+        <item name="colorSecondaryVariant">@color/yos_accent_700</item>
+        <item name="colorOnSecondary">@color/yos_text_inverse</item>
+
+        <!-- Background Colors -->
+        <item name="android:colorBackground">@color/yos_background</item>
+        <item name="colorSurface">@color/yos_surface_base</item>
+        <item name="colorOnSurface">@color/yos_text_primary</item>
+        <item name="android:windowBackground">@color/yos_background</item>
+
+        <!-- Error Colors -->
+        <item name="colorError">@color/yos_error</item>
+        <item name="colorOnError">@color/yos_text_inverse</item>
+
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">@color/yos_surface_base</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Navigation Bar -->
+        <item name="android:navigationBarColor">@color/yos_surface_base</item>
+        <item name="android:windowLightNavigationBar">true</item>
+
+        <!-- Typography -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.YOS.H1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.YOS.H2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.YOS.Body</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.YOS.Caption</item>
+
+        <!-- Component Styles -->
+        <item name="materialButtonStyle">@style/Widget.YOS.Button.Primary</item>
+        <item name="materialCardViewStyle">@style/Widget.YOS.Card.Recipe</item>
+        <item name="chipStyle">@style/Widget.YOS.Chip.Choice</item>
+        <item name="bottomNavigationStyle">@style/Widget.YOS.BottomNavigation</item>
+        <item name="floatingActionButtonStyle">@style/Widget.YOS.FloatingActionButton</item>
+
+        <!-- Shape -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.YOS.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.YOS.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.YOS.LargeComponent</item>
+
+        <!-- Animations -->
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <!-- Shape Appearances -->
+    <style name="ShapeAppearance.YOS.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearance.YOS.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ShapeAppearance.YOS.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- BottomSheet Theme -->
+    <style name="ThemeOverlay.YOS.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.YOS.BottomSheet</item>
+    </style>
+
+    <style name="Widget.YOS.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearance">@style/ShapeAppearance.YOS.BottomSheet</item>
+        <item name="android:background">@color/yos_surface_base</item>
+    </style>
+
+    <style name="ShapeAppearance.YOS.BottomSheet" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">24dp</item>
+        <item name="cornerSizeTopRight">24dp</item>
+    </style>
+
+</resources>

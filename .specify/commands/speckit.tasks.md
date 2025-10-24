@@ -1,19 +1,19 @@
-# Yemek Öneri Sistemi - Görev Listesi (Kotlin/Android Native)
+# Yemek Öneri Sistemi - Görev Listesi (Android/Kotlin)
 
-## Acil Görevler
+## Acil Görevler (UI Tema Odaklı)
 
 ### Proje Kurulumu
 - [x] Android projesi oluştur (Kotlin)
 - [x] Temel dizin yapısını kur
 - [x] Git repository ayarları
-- [ ] README.md güncelle
+- [ ] README.md güncelle (Android + FastAPI, tema entegrasyonu notu)
 - [ ] .gitignore güncelle (geçici dosyaları ekle)
 
 ### Geliştirme Ortamı
 - [x] Android Studio kurulumu
 - [x] Kotlin plugin konfigürasyonu
 - [ ] Android Emulator setup
-- [ ] Gradle build optimizasyonları
+- [ ] Gradle build optimizasyonları (konfigürasyon cache, parallel)
 
 ### Temel Kütüphaneler
 - [x] Material Design 3 components
@@ -23,10 +23,10 @@
 - [ ] Coil/Glide (image loading) kurulumu
 - [ ] ViewModel ve LiveData kurulumu
 
-## Backend Hazırlıkları
+## Backend Hazırlıkları (FastAPI)
 
 ### API Updates
-- [ ] CORS configuration for mobile
+- [ ] CORS configuration review (mevcut açık)
 - [ ] API versioning implementation
 - [ ] Response format standardization
 - [ ] Error response structure update
@@ -38,6 +38,15 @@
 - [ ] Secure token storage strategy
 
 ## UI Development Görevleri (Android)
+
+### Tema Entegrasyonu (YOS Calm Theme)
+- [x] colors_yos.xml eklendi/doğrulandı
+- [x] styles_yos.xml eklendi/doğrulandı
+- [x] themes_yos.xml eklendi/doğrulandı
+- [x] Manifest’te MainActivity `Theme.YOS`
+- [ ] HomeFragment komponent stilleri `Widget.YOS.*`
+- [ ] InventoryFragment arama/chip `Widget.YOS.SearchBar`, `Widget.YOS.Chip.*`
+- [ ] RecipeListFragment kart ve boş durum stilleri
 
 ### Navigation Setup
 - [x] Bottom Navigation View implementation
@@ -98,7 +107,7 @@
 - [ ] Recipe comments
 - [ ] Recipe image loading (Coil/Glide)
 
-### Recommendation Engine (RAG - Faz 3)
+### Recommendation Engine (Faz 3)
 - [x] Backend API integration yapısı (Retrofit)
 - [ ] RAG açıklaması görüntüleme
 - [ ] Filter preferences UI
@@ -187,14 +196,12 @@
 6. ✅ Retrofit API client
 7. ✅ Material Design 3 tema
 
-### 🔥 Yüksek Öncelik (Bu Hafta - FAZ 2)
-1. [ ] Recipe List Fragment implementation
-2. [ ] Recipe search backend entegrasyonu
-3. [ ] Recipe filtering (malzeme, kalori, süre)
-4. [ ] Image loading (Coil) kurulumu
-5. [ ] Room Database kurulumu (offline cache & favorites)
-6. [ ] Error handling ve loading states
-7. [ ] .gitignore güncelleme (geçici dosyalar)
+### 🔥 Yüksek Öncelik (Bu Hafta)
+1. [ ] Home/Inventory/RecipeList ekranlarında YOS stil bağlama
+2. [ ] Yükleme/boş/hata durum görünümleri (EmptyState + Progress)
+3. [ ] Image loading (Glide mevcut) ile kart görsellerini bağla
+4. [ ] Recipe arama ve filtre (UI) bileşenlerini hazırla
+5. [ ] .gitignore/README güncellemesi
 
 ### ⚙️ Orta Öncelik (Sonraki 2 Hafta - FAZ 2-3)
 1. [ ] Authentication (Login/Register)

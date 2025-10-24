@@ -38,19 +38,28 @@ class IngredientService:
         - Partial matching
         - Relevance scoring
         """
+        print(f"\n🔎 IngredientService.search_ingredients() çağrıldı")
+        print(f"   Query: '{query}'")
+        print(f"   Limit: {limit}")
+        print(f"   Toplam malzeme sayısı: {len(self.ingredients)}")
+
         if not query:
+            print(f"   ⚠️  Query boş, ilk {limit} malzeme döndürülüyor")
             return self.ingredients[:limit]
 
         # Tüm malzeme isimlerini çıkar
         ingredient_names = [ing.name for ing in self.ingredients]
+        print(f"   📋 Malzeme isimleri hazırlandı: {len(ingredient_names)} adet")
 
         # SearchEngine ile ara (threshold=30, minimum %30 match)
+        print(f"   🔍 SearchEngine.search() çağrılıyor...")
         search_results = self.search_engine.search(
             query=query,
             items=ingredient_names,
             threshold=30.0,
             limit=limit
         )
+        print(f"   ✅ SearchEngine {len(search_results)} sonuç döndürdü")
 
         # Sonuçları Ingredient objelerine çevir (sıralı)
         results = []
@@ -59,6 +68,10 @@ class IngredientService:
             ingredient = next((ing for ing in self.ingredients if ing.name == name), None)
             if ingredient:
                 results.append(ingredient)
+
+        print(f"   ✅ {len(results)} Ingredient objesi döndürülüyor")
+        if results:
+            print(f"   📋 İlk 3: {[r.name for r in results[:3]]}")
 
         return results
 

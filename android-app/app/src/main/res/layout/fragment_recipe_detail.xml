@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/yos_background"
     tools:context=".ui.recipes.RecipeDetailFragment">
 
     <!-- AppBar with Image -->
@@ -20,7 +20,7 @@
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="@color/primary"
+            app:contentScrim="@color/yos_surface_base"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
@@ -31,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:contentDescription="Tarif görseli"
-                android:background="@color/secondary"
+                android:background="@color/yos_surface_elevated"
                 app:layout_collapseMode="parallax"/>
 
             <!-- Overlay gradient -->
@@ -46,7 +46,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/ic_search_24"/>
+                app:navigationIcon="@drawable/ic_search_24"
+                app:titleTextColor="@color/yos_text_primary"
+                app:navigationIconTint="@color/yos_text_primary"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
