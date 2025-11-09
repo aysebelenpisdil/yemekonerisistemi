@@ -1,36 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 🎨 YÖS (Yemek Öneri Sistemi) Renk Paleti -->
-    <!-- Product Manager Notu: Bu renkler A/B testler sonucu %15 CTR artışı sağladı -->
+    <!-- Minimal Premium Renk Paleti -->
+    <!-- Tasarım: Zamansız, sade, yüksek kalite hissi -->
 
-    <!-- Ana Marka Renkleri -->
-    <color name="yos_brand_50">#F1F5FF</color>
-    <color name="yos_brand_100">#E3ECFF</color>
-    <color name="yos_brand_200">#C7D8FE</color>
-    <color name="yos_brand_300">#9EBBFC</color>
-    <color name="yos_brand_400">#789EF6</color>
-    <color name="yos_brand_500">#5A80EB</color> <!-- Primary CTA -->
-    <color name="yos_brand_600">#4766D4</color> <!-- Pressed state -->
-    <color name="yos_brand_700">#384FB2</color>
-    <color name="yos_brand_800">#2E418F</color>
-    <color name="yos_brand_900">#283874</color>
-
-    <!-- Vurgu Renkleri (Taze, Yenilikçi) -->
-    <color name="yos_accent_50">#E8FAF9</color>
-    <color name="yos_accent_100">#C7F3F0</color>
-    <color name="yos_accent_200">#9FE9E3</color>
-    <color name="yos_accent_300">#77DED5</color>
-    <color name="yos_accent_400">#5AC8C1</color>
-    <color name="yos_accent_500">#5AC8C1</color> <!-- Secondary actions -->
-    <color name="yos_accent_600">#4BA39D</color>
-    <color name="yos_accent_700">#3D8680</color>
-
-    <!-- Yüzey ve Arka Plan Renkleri -->
-    <color name="yos_surface_base">#FFFFFF</color>
-    <!-- Sıcak, krem ağırlıklı yüzeyler -->
-    <color name="yos_surface_elevated">#FFF7EF</color> <!-- Kartlar için (ince krem/şampanya) -->
-    <color name="yos_surface_overlay">#FFF2E8</color> <!-- Modal/sheet (sıcak overlay) -->
-    <color name="yos_background">#FFFCF7</color> <!-- Ana arka plan: inci/krem -->
+    <!-- Arka Plan ve Yüzeyler -->
+    <color name="yos_background">#FAFAF8</color> <!-- Ana arka plan: çok hafif sıcak beyaz -->
+    <color name="yos_surface_base">#FFFFFF</color> <!-- İç yüzeyler -->
+    <color name="yos_surface_elevated">#F6F6F3</color> <!-- Kart/şerit: çok ince ayrım -->
+    <color name="yos_surface_overlay">#F3F3F0</color> <!-- Sheet/overlay: çok hafif -->
 
     <!-- Metin Renkleri (AA Kontrast garantili) -->
     <color name="yos_text_primary">#111111</color> <!-- Başlıklar: net siyaha yakın -->
@@ -39,61 +16,72 @@
     <color name="yos_text_disabled">#A0AEC0</color>
     <color name="yos_text_inverse">#FFFFFF</color> <!-- Koyu arka plan üzeri -->
 
-    <!-- Durum Renkleri (User feedback) -->
-    <color name="yos_success">#5AD2A0</color> <!-- Başarılı işlem -->
+    <!-- CTA (minimal ama net) -->
+    <color name="yos_cta_solid">#111111</color> <!-- Buton dolgu - beyaz yazı -->
+    <color name="yos_cta_text">#111111</color> <!-- Yazı/ikon - düz -->
+    <color name="yos_cta_outline">#111111</color> <!-- Çizgi -->
+
+    <!-- Durum Renkleri (sade, nötr odaklı; sadece gerekli yerlerde) -->
+    <color name="yos_success">#1F8A4D</color> <!-- Başarılı işlem -->
     <color name="yos_success_light">#E6F9F1</color>
-    <color name="yos_warning">#F6C34A</color> <!-- Uyarı -->
+    <color name="yos_warning">#AF7300</color> <!-- Uyarı -->
     <color name="yos_warning_light">#FEF5E7</color>
-    <color name="yos_error">#FF6B6B</color> <!-- Hata -->
+    <color name="yos_error">#C93C3C</color> <!-- Hata -->
     <color name="yos_error_light">#FFE5E5</color>
-    <color name="yos_info">#5A80EB</color> <!-- Bilgi -->
-    <color name="yos_info_light">#E3ECFF</color>
+    <color name="yos_info">#111111</color> <!-- Bilgi -->
+    <color name="yos_info_light">#F6F6F3</color>
 
     <!-- Özel Bileşen Renkleri -->
 
-    <!-- Malzeme Chip'leri -->
-    <color name="yos_chip_available">#E6F9F1</color> <!-- Mevcut malzeme -->
-    <color name="yos_chip_available_text">#2D7A5C</color>
-    <color name="yos_chip_missing">#FFE5E5</color> <!-- Eksik malzeme -->
-    <color name="yos_chip_missing_text">#C53030</color>
-    <color name="yos_chip_selected">#5A80EB</color> <!-- Seçili -->
+    <!-- Malzeme Chip'leri (minimal) -->
+    <color name="yos_chip_available">#F6F6F3</color> <!-- Mevcut malzeme -->
+    <color name="yos_chip_available_text">#444444</color>
+    <color name="yos_chip_missing">#FFF9F9</color> <!-- Eksik malzeme -->
+    <color name="yos_chip_missing_text">#777777</color>
+    <color name="yos_chip_selected">#111111</color> <!-- Seçili -->
     <color name="yos_chip_selected_text">#FFFFFF</color>
 
-    <!-- Tarif Kartları -->
-    <color name="yos_recipe_easy">#5AD2A0</color> <!-- Kolay tarif badge -->
-    <color name="yos_recipe_medium">#F6C34A</color> <!-- Orta -->
-    <color name="yos_recipe_hard">#FF6B6B</color> <!-- Zor -->
-    <color name="yos_recipe_quick">#5AC8C1</color> <!-- Hızlı tarif -->
+    <!-- Tarif Kartları (minimal badges) -->
+    <color name="yos_recipe_easy">#444444</color> <!-- Kolay tarif badge -->
+    <color name="yos_recipe_medium">#666666</color> <!-- Orta -->
+    <color name="yos_recipe_hard">#888888</color> <!-- Zor -->
+    <color name="yos_recipe_quick">#555555</color> <!-- Hızlı tarif -->
 
-    <!-- Gradient Tanımları (Start-End) -->
-    <color name="yos_gradient_primary_start">#5A80EB</color>
-    <color name="yos_gradient_primary_end">#4766D4</color>
-    <color name="yos_gradient_accent_start">#5AC8C1</color>
-    <color name="yos_gradient_accent_end">#4BA39D</color>
-    <color name="yos_gradient_hero_start">#F1F5FF</color>
-    <color name="yos_gradient_hero_end">#E3ECFF</color>
+    <!-- Gradient Tanımları (minimal) -->
+    <color name="yos_gradient_primary_start">#FAFAF8</color>
+    <color name="yos_gradient_primary_end">#F6F6F3</color>
+    <color name="yos_gradient_accent_start">#FFFFFF</color>
+    <color name="yos_gradient_accent_end">#FAFAF8</color>
+    <color name="yos_gradient_hero_start">#FFFFFF</color>
+    <color name="yos_gradient_hero_end">#FAFAF8</color>
 
-    <!-- Gölge ve Border -->
+    <!-- Sınırlar/Ayırıcı -->
+    <color name="yos_border">#EAEAEA</color>
+    <color name="yos_divider">#EFEFEF</color>
     <color name="yos_shadow">#1A1E2E0D</color> <!-- %5 opacity -->
     <color name="yos_shadow_medium">#1A1E2E1A</color> <!-- %10 opacity -->
-    <color name="yos_border">#E2E8F0</color>
-    <color name="yos_divider">#EDF2F7</color>
 
-    <!-- Bottom Navigation -->
-    <color name="yos_bottom_nav_inactive">#718096</color>
-    <color name="yos_bottom_nav_active">#5A80EB</color>
+    <!-- Bottom Navigation (minimal) -->
+    <color name="yos_bottom_nav_inactive">#999999</color>
+    <color name="yos_bottom_nav_active">#111111</color>
 
-    <!-- Search Bar -->
-    <color name="yos_search_background">#FFF9F3</color>
-    <color name="yos_search_icon">#A0AEC0</color>
-    <color name="yos_search_text">#2D3748</color>
-    <color name="yos_search_hint">#A0AEC0</color>
+    <!-- Search Bar (minimal) -->
+    <color name="yos_search_background">#F6F6F3</color>
+    <color name="yos_search_icon">#777777</color>
+    <color name="yos_search_text">#111111</color>
+    <color name="yos_search_hint">#999999</color>
 
-    <!-- Rating Stars -->
-    <color name="yos_star_filled">#F6C34A</color>
-    <color name="yos_star_empty">#E2E8F0</color>
+    <!-- Rating Stars (minimal) -->
+    <color name="yos_star_filled">#111111</color>
+    <color name="yos_star_empty">#EAEAEA</color>
 
-    <!-- Shimmer/Skeleton Loading -->
-    <color name="yos_shimmer_base">#F7FAFC</color>
-    <color name="yos_shimmer_highlight">#EDF2F7</color>
+    <!-- Shimmer/Skeleton Loading (minimal) -->
+    <color name="yos_shimmer_base">#FAFAF8</color>
+    <color name="yos_shimmer_highlight">#F3F3F0</color>
+
+    <!-- Eski brand renkleri (sadece çok gerekli yerde kullanım için) -->
+    <color name="yos_brand_500">#111111</color> <!-- Uyumluluk için -->
+    <color name="yos_brand_700">#000000</color>
+    <color name="yos_accent_500">#444444</color>
+    <color name="yos_accent_700">#222222</color>
 </resources>

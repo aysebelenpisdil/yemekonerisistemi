@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="✨ 12 tarif bulundu"
+                    android:text="12 tarif bulundu"
                     android:textColor="@color/yos_text_secondary"/>
 
             </LinearLayout>
@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminateTint="@color/yos_brand_500"
+        android:indeterminateTint="@color/yos_cta_solid"
         android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

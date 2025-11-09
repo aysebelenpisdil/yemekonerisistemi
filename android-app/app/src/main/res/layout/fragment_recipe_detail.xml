@@ -13,8 +13,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:theme="@style/Theme.YemekOneri.AppBarOverlay">
+        android:layout_height="300dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
@@ -88,35 +87,37 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    tools:text="⏱️ 30 dk"
-                    android:textSize="14sp"/>
+                    tools:text="30 dk"
+                    android:textSize="14sp"
+                    android:textColor="@color/yos_text_secondary"/>
 
                 <TextView
                     android:id="@+id/caloriesText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    tools:text="🔥 280 kal"
-                    android:textSize="14sp"/>
+                    tools:text="280 kal"
+                    android:textSize="14sp"
+                    android:textColor="@color/yos_text_secondary"/>
 
                 <TextView
                     android:id="@+id/servingsText"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    tools:text="👥 4 Kişi"
-                    android:textSize="14sp"/>
+                    tools:text="4 Kişi"
+                    android:textSize="14sp"
+                    android:textColor="@color/yos_text_secondary"/>
 
             </LinearLayout>
 
             <!-- NEDEN ÖNERİLDİ? Card (RAG Açıklaması) -->
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
                 android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/secondary">
+                app:cardBackgroundColor="@color/yos_surface_elevated">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,7 +131,7 @@
                         android:text="@string/why_recommended_detail"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="@color/on_secondary"
+                        android:textColor="@color/yos_text_primary"
                         android:layout_marginBottom="8dp"/>
 
                     <TextView
@@ -138,7 +139,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Bu tarif envanterinizdeki tavuk, domates ve biber ile mükemmel uyum sağlıyor. Ayrıca günlük kalori hedefinize uygun ve protein değeri yüksek."
-                        android:textColor="@color/on_secondary"
+                        android:textColor="@color/yos_text_secondary"
                         android:textSize="14sp"
                         android:lineSpacingExtra="4dp"/>
 
@@ -160,16 +161,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:text="❤️ Favorilere Ekle"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    android:text="Favorilere Ekle"
+                    style="@style/Widget.YOS.Button.Secondary"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/shareButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="🔗 Paylaş"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                    android:text="Paylaş"
+                    style="@style/Widget.YOS.Button.Secondary"/>
 
             </LinearLayout>
 
@@ -197,10 +198,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:text="@string/add_to_shopping_list"
-                android:textSize="16sp"
                 app:icon="@drawable/ic_add_24"
-                app:cornerRadius="12dp"
-                style="@style/Widget.MaterialComponents.Button"/>
+                style="@style/Widget.YOS.Button.Primary"/>
 
             <!-- HAZIRLANIŞI Bölümü -->
             <TextView
@@ -222,16 +221,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🍎 BESİN DEĞERLERİ"
+                android:text="Besin Değerleri"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:textColor="@color/yos_text_primary"
                 android:layout_marginBottom="12dp"/>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="12dp">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -264,7 +263,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@android:color/darker_gray"
+                        android:background="@color/yos_divider"
                         android:layout_marginVertical="8dp"/>
 
                     <!-- Protein -->
@@ -347,8 +346,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:text="🍳 Pişirmeye Başla"
-        android:textSize="16sp"
-        app:icon="@drawable/ic_restaurant_24"/>
+        android:text="Pişirmeye Başla"
+        android:textSize="15sp"
+        app:icon="@drawable/ic_restaurant_24"
+        app:backgroundTint="@color/yos_cta_solid"
+        app:iconTint="@color/yos_text_inverse"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
