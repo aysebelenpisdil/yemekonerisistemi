@@ -137,12 +137,11 @@
                 <!-- Yemek Planla -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/mealPlannerCard"
+                    style="@style/Widget.YOS.Card.Recipe"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="12dp">
+                    android:layout_marginEnd="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -174,11 +173,10 @@
                 <!-- Alışveriş -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/shoppingListCard"
+                    style="@style/Widget.YOS.Card.Recipe"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
-                    android:layout_weight="1"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="12dp">
+                    android:layout_weight="1">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -230,7 +228,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/home_see_all"
-                    android:textColor="@color/yos_brand_500"
+                    android:textColor="@color/yos_cta_text"
                     android:textStyle="bold"/>
 
             </LinearLayout>
@@ -273,7 +271,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/home_see_all"
-                    android:textColor="@color/yos_brand_500"
+                    android:textColor="@color/yos_cta_text"
                     android:textStyle="bold"/>
 
             </LinearLayout>

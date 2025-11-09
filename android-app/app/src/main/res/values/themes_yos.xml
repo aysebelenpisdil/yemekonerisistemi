@@ -4,14 +4,14 @@
     <!-- Product Strategy: Clean, Modern, Engaging UI -->
 
     <style name="Theme.YOS" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Primary Brand Colors -->
-        <item name="colorPrimary">@color/yos_brand_500</item>
-        <item name="colorPrimaryVariant">@color/yos_brand_700</item>
+        <!-- Minimal Premium Theme Colors -->
+        <item name="colorPrimary">@color/yos_cta_solid</item>
+        <item name="colorPrimaryVariant">@color/yos_text_primary</item>
         <item name="colorOnPrimary">@color/yos_text_inverse</item>
 
-        <!-- Secondary/Accent Colors -->
-        <item name="colorSecondary">@color/yos_accent_500</item>
-        <item name="colorSecondaryVariant">@color/yos_accent_700</item>
+        <!-- Secondary/Accent Colors (minimal) -->
+        <item name="colorSecondary">@color/yos_text_secondary</item>
+        <item name="colorSecondaryVariant">@color/yos_text_primary</item>
         <item name="colorOnSecondary">@color/yos_text_inverse</item>
 
         <!-- Background Colors -->
@@ -24,12 +24,12 @@
         <item name="colorError">@color/yos_error</item>
         <item name="colorOnError">@color/yos_text_inverse</item>
 
-        <!-- Status Bar -->
-        <item name="android:statusBarColor">@color/yos_surface_base</item>
+        <!-- Status Bar (açık tema) -->
+        <item name="android:statusBarColor">@color/yos_background</item>
         <item name="android:windowLightStatusBar">true</item>
 
-        <!-- Navigation Bar -->
-        <item name="android:navigationBarColor">@color/yos_surface_base</item>
+        <!-- Navigation Bar (açık tema) -->
+        <item name="android:navigationBarColor">@color/yos_background</item>
         <item name="android:windowLightNavigationBar">true</item>
 
         <!-- Typography -->
@@ -78,7 +78,7 @@
 
     <style name="Widget.YOS.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
         <item name="shapeAppearance">@style/ShapeAppearance.YOS.BottomSheet</item>
-        <item name="android:background">@color/yos_surface_base</item>
+        <item name="android:background">@color/yos_surface_overlay</item>
     </style>
 
     <style name="ShapeAppearance.YOS.BottomSheet" parent="ShapeAppearance.MaterialComponents.MediumComponent">

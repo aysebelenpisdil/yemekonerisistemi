@@ -1,0 +1,148 @@
+package com.yemekonerisistemi.app.data.prefs
+
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import java.io.IOException
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
+
+class UserPreferences(private val context: Context) {
+
+    private val dataStore = context.dataStore
+
+    // Keys
+    companion object {
+        val DIET_TYPES_KEY = stringSetPreferencesKey("diet_types")
+        val ALLERGENS_KEY = stringSetPreferencesKey("allergens")
+        val CUISINES_KEY = stringSetPreferencesKey("cuisines")
+        val NOTIFICATIONS_RECOMMENDATIONS_KEY = booleanPreferencesKey("notifications_recommendations")
+        val NOTIFICATIONS_INVENTORY_KEY = booleanPreferencesKey("notifications_inventory")
+        val NOTIFICATIONS_WEEKLY_SUMMARY_KEY = booleanPreferencesKey("notifications_weekly_summary")
+    }
+
+    // Diet Types
+    val dietTypes: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[DIET_TYPES_KEY] ?: emptySet()
+        }
+
+    suspend fun updateDietTypes(dietTypes: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[DIET_TYPES_KEY] = dietTypes
+        }
+    }
+
+    // Allergens
+    val allergens: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[ALLERGENS_KEY] ?: emptySet()
+        }
+
+    suspend fun updateAllergens(allergens: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[ALLERGENS_KEY] = allergens
+        }
+    }
+
+    // Cuisines
+    val cuisines: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[CUISINES_KEY] ?: emptySet()
+        }
+
+    suspend fun updateCuisines(cuisines: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[CUISINES_KEY] = cuisines
+        }
+    }
+
+    // Notifications - Recommendations
+    val notificationsRecommendations: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[NOTIFICATIONS_RECOMMENDATIONS_KEY] ?: false
+        }
+
+    suspend fun updateNotificationsRecommendations(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[NOTIFICATIONS_RECOMMENDATIONS_KEY] = enabled
+        }
+    }
+
+    // Notifications - Inventory
+    val notificationsInventory: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[NOTIFICATIONS_INVENTORY_KEY] ?: false
+        }
+
+    suspend fun updateNotificationsInventory(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[NOTIFICATIONS_INVENTORY_KEY] = enabled
+        }
+    }
+
+    // Notifications - Weekly Summary
+    val notificationsWeeklySummary: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[NOTIFICATIONS_WEEKLY_SUMMARY_KEY] ?: false
+        }
+
+    suspend fun updateNotificationsWeeklySummary(enabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[NOTIFICATIONS_WEEKLY_SUMMARY_KEY] = enabled
+        }
+    }
+
+    // Clear all preferences
+    suspend fun clearAll() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+}

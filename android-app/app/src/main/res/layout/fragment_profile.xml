@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Profil Ekranı - Minimal Premium Design -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/yos_background"
+    tools:context=".ui.profile.ProfileFragment">
+
+    <!-- AppBar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yos_surface_base">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Profil"
+            app:titleTextColor="@color/yos_text_primary"
+            app:navigationIconTint="@color/yos_text_primary"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Ana İçerik -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Hesap Kartı -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hesap"
+                        android:textColor="@color/yos_text_primary"
+                        android:layout_marginBottom="12dp"/>
+
+                    <TextView
+                        android:id="@+id/userEmailText"
+                        style="@style/TextAppearance.YOS.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="kullanici@email.com"
+                        android:textColor="@color/yos_text_secondary"
+                        android:layout_marginBottom="16dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/logoutButton"
+                        style="@style/Widget.YOS.Button.Secondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Çıkış Yap"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Tercihler Kartı -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tercihler"
+                        android:textColor="@color/yos_text_primary"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Diyet Tipleri -->
+                    <TextView
+                        style="@style/TextAppearance.YOS.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Diyet Tipi"
+                        android:textColor="@color/yos_text_secondary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/dietChipGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:singleSelection="false">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipVegetarian"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vejetaryen"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipVegan"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vegan"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipGlutenFree"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Glutensiz"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipKeto"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Keto"
+                            android:checkable="true"/>
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <!-- Alerjenler -->
+                    <TextView
+                        style="@style/TextAppearance.YOS.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Alerjenler"
+                        android:textColor="@color/yos_text_secondary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/allergenChipGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:singleSelection="false">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipNuts"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Fındık/Fıstık"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipMilk"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Süt"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipEgg"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Yumurta"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSeafood"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Deniz Ürünleri"
+                            android:checkable="true"/>
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <!-- Mutfak Tercihleri -->
+                    <TextView
+                        style="@style/TextAppearance.YOS.Label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mutfak Tercihleri"
+                        android:textColor="@color/yos_text_secondary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/cuisineChipGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="false">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipTurkish"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Türk"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipItalian"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="İtalyan"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipAsian"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Asya"
+                            android:checkable="true"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipMediterranean"
+                            style="@style/Widget.YOS.Chip.Choice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Akdeniz"
+                            android:checkable="true"/>
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Envanter & Listeler -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Envanter &amp; Listeler"
+                        android:textColor="@color/yos_text_primary"
+                        android:layout_marginBottom="16dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/myInventoryButton"
+                            style="@style/Widget.YOS.Button.Primary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="8dp"
+                            android:text="Buzdolabım"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/shoppingListButton"
+                            style="@style/Widget.YOS.Button.Secondary"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Alışveriş Listesi"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Haftalık Özet -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Haftalık Özet"
+                        android:textColor="@color/yos_text_primary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        android:id="@+id/weeklySummaryText"
+                        style="@style/TextAppearance.YOS.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bu hafta 5 yeni tarif denedin • İsraf %8 azaldı"
+                        android:textColor="@color/yos_text_secondary"
+                        android:lineSpacingExtra="4dp"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Kaydedilenler -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.YOS.H2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kaydedilenler"
+                            android:textColor="@color/yos_text_primary"/>
+
+                        <TextView
+                            android:id="@+id/savedCountText"
+                            style="@style/TextAppearance.YOS.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="23 tarif"
+                            android:textColor="@color/yos_text_secondary"
+                            android:layout_marginTop="4dp"/>
+
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/viewAllSavedButton"
+                        style="@style/Widget.YOS.Button.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hepsini Gör"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Bildirimler -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bildirimler"
+                        android:textColor="@color/yos_text_primary"
+                        android:layout_marginBottom="12dp"/>
+
+                    <!-- Yeni Öneriler Switch -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="8dp">
+
+                        <TextView
+                            style="@style/TextAppearance.YOS.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Yeni öneriler"
+                            android:textColor="@color/yos_text_primary"/>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/notificationsRecommendationsSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/yos_divider"
+                        android:layout_marginVertical="8dp"/>
+
+                    <!-- Envanter Uyarıları Switch -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="8dp">
+
+                        <TextView
+                            style="@style/TextAppearance.YOS.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Envanter uyarıları"
+                            android:textColor="@color/yos_text_primary"/>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/notificationsInventorySwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/yos_divider"
+                        android:layout_marginVertical="8dp"/>
+
+                    <!-- Haftalık Özet Switch -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingVertical="8dp">
+
+                        <TextView
+                            style="@style/TextAppearance.YOS.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Haftalık özet"
+                            android:textColor="@color/yos_text_primary"/>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/notificationsWeeklySummarySwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Gizlilik -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gizlilik"
+                        android:textColor="@color/yos_text_primary"
+                        android:layout_marginBottom="8dp"/>
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Verileriniz güvenle saklanmaktadır"
+                        android:textColor="@color/yos_text_secondary"
+                        android:layout_marginBottom="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/downloadDataButton"
+                            style="@style/Widget.YOS.Button.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Verimi İndir"
+                            android:layout_marginEnd="8dp"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/deleteDataButton"
+                            style="@style/Widget.YOS.Button.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hesabı Sil"
+                            android:textColor="@color/yos_error"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Destek -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.YOS.Card.Recipe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="80dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        style="@style/TextAppearance.YOS.H2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Destek"
+                        android:textColor="@color/yos_text_primary"
+                        android:layout_marginBottom="12dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/feedbackButton"
+                        style="@style/Widget.YOS.Button.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Geri bildirim gönder"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
