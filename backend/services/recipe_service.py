@@ -12,44 +12,96 @@ from sqlalchemy import or_, and_
 from db import models as db_models
 
 class RecipeService:
-    """Tarif servisi - DB + demo implementation"""
+    """Tarif servisi - DB + demo + JSON implementation"""
 
     def __init__(self, db: Session = None):
         self.db = db
         if not self.db:
-            self.demo_recipes = self._load_demo_recipes()
+            # Hardcoded (Turkce) ve JSON (Ingilizce) tarifleri birlestir
+            hardcoded = self._load_hardcoded_recipes()
+            json_recipes = self._load_json_recipes()
+
+            # ID cakismalarini onlemek icin JSON tariflerinin ID'lerini kaydır
+            if hardcoded and json_recipes:
+                max_id = max(r.id for r in hardcoded)
+                for recipe in json_recipes:
+                    recipe.id = recipe.id + max_id
+
+            self.demo_recipes = hardcoded + json_recipes
+            print(f"[RecipeService] Yuklendi: {len(hardcoded)} hardcoded + {len(json_recipes)} JSON = {len(self.demo_recipes)} toplam tarif")
         else:
             self.demo_recipes = None
 
-    def _load_demo_recipes(self) -> List[Recipe]:
-        """Demo tarifleri JSON dosyasından yükle (fallback for no DB)"""
-        # JSON dosyasının yolunu bul
-        current_dir = Path(__file__).parent  # services/
+    def _load_hardcoded_recipes(self) -> List[Recipe]:
+        """Turkce demo tarifleri recipes.json dosyasindan yukle"""
+        current_dir = Path(__file__).parent
         json_path = current_dir.parent / "data" / "recipes.json"
 
         try:
             with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-            return [
+            recipes = [
                 Recipe(
                     id=item["id"],
                     title=item["title"],
                     cooking_time=item["cooking_time"],
                     calories=item["calories"],
-                    servings=item["servings"],
-                    recommendation_reason=item["recommendation_reason"],
-                    available_ingredients=item["available_ingredients"],
+                    servings=item.get("servings", 4),
+                    recommendation_reason=item.get("recommendation_reason"),
+                    available_ingredients=item.get("available_ingredients", ""),
                     image_url=item.get("image_url", ""),
                     instructions=item.get("instructions", [])
                 )
                 for item in data
             ]
+            print(f"[RecipeService] recipes.json: {len(recipes)} tarif yuklendi")
+            return recipes
+
         except FileNotFoundError:
-            print(f"[RecipeService] Warning: {json_path} not found, returning empty list")
+            print(f"[RecipeService] Warning: {json_path} bulunamadi")
             return []
         except json.JSONDecodeError as e:
             print(f"[RecipeService] Error parsing {json_path}: {e}")
+            return []
+        except Exception as e:
+            print(f"[RecipeService] Unexpected error loading {json_path}: {e}")
+            return []
+
+    def _load_json_recipes(self) -> List[Recipe]:
+        """Ingilizce tarifleri recipes_en.json dosyasindan yukle"""
+        current_dir = Path(__file__).parent
+        json_path = current_dir.parent / "data" / "recipes_en.json"
+
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            recipes = [
+                Recipe(
+                    id=item["id"],
+                    title=item["title"],
+                    cooking_time=item.get("cooking_time", 30),
+                    calories=item.get("calories", 300),
+                    servings=item.get("servings", 4),
+                    recommendation_reason=item.get("recommendation_reason"),
+                    available_ingredients=item.get("available_ingredients", ""),
+                    image_url=item.get("image_url", ""),
+                    instructions=item.get("instructions", [])
+                )
+                for item in data
+            ]
+            print(f"[RecipeService] recipes_en.json: {len(recipes)} tarif yuklendi")
+            return recipes
+
+        except FileNotFoundError:
+            print(f"[RecipeService] Warning: {json_path} bulunamadi, JSON tarifleri atlanıyor")
+            return []
+        except json.JSONDecodeError as e:
+            print(f"[RecipeService] Error parsing {json_path}: {e}")
+            return []
+        except Exception as e:
+            print(f"[RecipeService] Unexpected error loading {json_path}: {e}")
             return []
 
     def filter_recipes(self, q: Optional[str] = None, max_time: Optional[int] = None, limit: int = 20) -> List[Recipe]:

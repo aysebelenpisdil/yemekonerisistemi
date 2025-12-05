@@ -5,10 +5,20 @@ Yemek Öneri Sistemi Backend
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 import uvicorn
 
 # API router'ları import et
-from api import ingredients, recipes, semantic
+from api import ingredients, recipes
+
+# Semantic search opsiyonel (sentence-transformers gerektirir)
+try:
+    from api import semantic
+    SEMANTIC_AVAILABLE = True
+except Exception as e:
+    print(f"[Warning] Semantic search devre disi: {e}")
+    SEMANTIC_AVAILABLE = False
 
 app = FastAPI(
     title="Yemek Öneri Sistemi API",
@@ -25,6 +35,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Static files - Yemek gorselleri
+IMAGES_DIR = Path(__file__).parent.parent / "data" / "Food Images" / "Food Images"
+if IMAGES_DIR.exists():
+    app.mount("/static/images", StaticFiles(directory=str(IMAGES_DIR)), name="images")
+
 @app.get("/")
 async def root():
     return {
@@ -35,6 +50,7 @@ async def root():
             "ingredients": "/api/ingredients",
             "recipes": "/api/recipes",
             "semantic": "/api/semantic",
+            "images": "/static/images",
             "docs": "/docs"
         }
     }
@@ -46,7 +62,9 @@ async def health_check():
 # Router'ları ekle
 app.include_router(ingredients.router, prefix="/api/ingredients", tags=["ingredients"])
 app.include_router(recipes.router, prefix="/api/recipes", tags=["recipes"])
-app.include_router(semantic.router, prefix="/api/semantic", tags=["semantic"])
+
+if SEMANTIC_AVAILABLE:
+    app.include_router(semantic.router, prefix="/api/semantic", tags=["semantic"])
 
 if __name__ == "__main__":
     uvicorn.run(
