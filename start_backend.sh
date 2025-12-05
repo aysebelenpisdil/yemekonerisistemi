@@ -1,22 +1,20 @@
 #!/bin/bash
 
-# Yemek Öneri Sistemi - Backend Başlatma Script
-# Bu script backend server'ı başlatır ve sağlık kontrolü yapar
-
 echo "=========================================="
-echo "🚀 Backend Server Başlatılıyor..."
+echo "🚀 Yemek Öneri Sistemi - Backend"
 echo "=========================================="
 
-# Backend dizinine git
 cd "$(dirname "$0")/backend" || exit 1
 
-# Virtual environment varsa aktif et
+echo "🧹 Port temizleniyor..."
+lsof -ti:8000 | xargs kill -9 2>/dev/null
+sleep 1
+
 if [ -d "venv" ]; then
     echo "📦 Virtual environment aktif ediliyor..."
     source venv/bin/activate
 fi
 
-# Gerekli paketlerin kurulu olup olmadığını kontrol et
 echo "📋 Paket kontrolü..."
 python3 -c "import fastapi, uvicorn" 2>/dev/null || {
     echo "❌ Gerekli paketler bulunamadı!"
@@ -24,16 +22,24 @@ python3 -c "import fastapi, uvicorn" 2>/dev/null || {
     exit 1
 }
 
-# Backend'i başlat
 echo ""
-echo "✅ Backend başlatılıyor: http://0.0.0.0:8000"
-echo "📱 Android Emulator için: http://10.0.2.2:8000"
-echo "📱 Fiziksel cihaz için yerel IP adresinizi kullanın"
+echo "✅ Backend adresleri:"
+echo "   💻 Bilgisayardan: http://localhost:8000"
+echo "   📱 Emulator'den:  http://10.0.2.2:8000"
 echo ""
 echo "📖 API Dokümantasyonu: http://localhost:8000/docs"
 echo ""
 echo "⏹️  Durdurmak için: Ctrl+C"
 echo ""
 
-# Server'ı başlat
-python3 main.py
+python3 -c "
+import uvicorn
+from main import app
+
+uvicorn.run(
+    app,
+    host='0.0.0.0',
+    port=8000,
+    log_level='info'
+)
+"
