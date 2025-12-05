@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 # API router'ları import et
-from api import ingredients, recipes
+from api import ingredients, recipes, semantic
 
 app = FastAPI(
     title="Yemek Öneri Sistemi API",
@@ -34,6 +34,7 @@ async def root():
         "endpoints": {
             "ingredients": "/api/ingredients",
             "recipes": "/api/recipes",
+            "semantic": "/api/semantic",
             "docs": "/docs"
         }
     }
@@ -45,6 +46,7 @@ async def health_check():
 # Router'ları ekle
 app.include_router(ingredients.router, prefix="/api/ingredients", tags=["ingredients"])
 app.include_router(recipes.router, prefix="/api/recipes", tags=["recipes"])
+app.include_router(semantic.router, prefix="/api/semantic", tags=["semantic"])
 
 if __name__ == "__main__":
     uvicorn.run(

@@ -1,18 +1,24 @@
 """
 Malzeme (Ingredient) API endpoints
 """
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 from typing import Optional
+from sqlalchemy.orm import Session
 from models.ingredient import Ingredient, IngredientSearchResponse
 from services.ingredient_service import IngredientService
+from db.base import get_db
 
 router = APIRouter()
-ingredient_service = IngredientService()
+
+def get_ingredient_service(db: Session = Depends(get_db)) -> IngredientService:
+    """Get ingredient service with DB session"""
+    return IngredientService(db=db)
 
 @router.get("/", response_model=IngredientSearchResponse)
 async def search_ingredients(
     q: Optional[str] = Query(None, description="Arama sorgusu"),
-    limit: int = Query(50, ge=1, le=500, description="Sonuç limiti")
+    limit: int = Query(50, ge=1, le=500, description="Sonuç limiti"),
+    service: IngredientService = Depends(get_ingredient_service)
 ):
     """
     Malzeme ara
@@ -26,7 +32,7 @@ async def search_ingredients(
     print(f"📊 Limit: {limit}")
     print(f"🌐 Endpoint: /api/ingredients/")
 
-    results = ingredient_service.search_ingredients(q, limit)
+    results = service.search_ingredients(q, limit)
 
     print(f"✅ Sonuç sayısı: {len(results)}")
     if results:
@@ -42,19 +48,19 @@ async def search_ingredients(
     )
 
 @router.get("/all", response_model=list[Ingredient])
-async def get_all_ingredients():
+async def get_all_ingredients(service: IngredientService = Depends(get_ingredient_service)):
     """Tüm malzemeleri getir"""
-    return ingredient_service.get_all_ingredients()
+    return service.get_all_ingredients()
 
 @router.get("/names", response_model=list[str])
-async def get_ingredient_names():
+async def get_ingredient_names(service: IngredientService = Depends(get_ingredient_service)):
     """Tüm malzeme isimlerini getir (autocomplete için)"""
-    return ingredient_service.get_ingredient_names()
+    return service.get_ingredient_names()
 
 @router.get("/{name}", response_model=Ingredient)
-async def get_ingredient_by_name(name: str):
+async def get_ingredient_by_name(name: str, service: IngredientService = Depends(get_ingredient_service)):
     """İsme göre malzeme detayını getir"""
-    ingredient = ingredient_service.get_ingredient_by_name(name)
+    ingredient = service.get_ingredient_by_name(name)
     if not ingredient:
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Malzeme bulunamadı")
