@@ -1,122 +1,157 @@
-# Yemek Öneri Sistemi
-## RAG Tabanlı Kişiselleştirilmiş Yemek Öneri Sistemi
+# Yemek Oneri Sistemi
 
-**Proje Sahibi:** Ayşe Belen Pısdıl
-**Üniversite:** Konya Teknik Üniversitesi - Bilgisayar Mühendisliği
-**Proje Türü:** Bitirme Projesi
+**Proje Sahibi:** Ayse Belen Pisdil
+**Universite:** Konya Teknik Universitesi - Bilgisayar Muhendisligi
+**Proje Turu:** Bitirme Projesi
 
-## 📋 Proje Özeti
-Bu sistem, kullanıcıların evdeki malzemelerine (envanter) ve geçmiş tercihlerine göre kişiselleştirilmiş yemek tarifleri öneren, RAG (Retrieval-Augmented Generation) mimarisi kullanarak önerilerin nedenini açıklayabilen akıllı bir yemek asistanıdır.
+---
 
-## 🏗️ Sistem Mimarisi
+## Proje Aciklamasi
+
+Kullanicilarin evdeki malzemelerine gore kisisellestirilmis yemek tarifleri oneren akilli bir mobil uygulama ve backend sistemi.
+
+---
+
+## Tamamlanan Calismalarin Detayli Aciklamasi
+
+### 1. Backend Gelistirme (Python/FastAPI)
+
+#### API Endpoints
+- **GET /api/ingredients/** - Malzeme arama (fuzzy search destekli)
+- **GET /api/recipes/** - Tarif listeleme ve filtreleme
+- **POST /api/recipes/recommendations** - Malzemelere gore tarif onerisi
+- **GET /api/recipes/{id}** - Tarif detayi
+- **GET /health** - Sistem sagligi kontrolu
+
+#### Veritabani Yapisi
+- SQLAlchemy ORM ile model tanimlari
+- Alembic ile veritabani migration yonetimi
+- Recipe ve Ingredient tablolari
+- JSON tabanli demo veri destegi
+
+#### Servis Katmani
+- **RecipeService**: Tarif arama, filtreleme ve oneri mantigi
+- **IngredientService**: Malzeme arama ve fuzzy matching
+- **SemanticService**: Semantik arama altyapisi (embedding destegi)
+
+#### Ozellikler
+- Fuzzy search ile yazim hatalarini tolere eden arama
+- Turkce karakter destegi (cilek -> Cilek)
+- Pisirme suresi ve kalori bazli filtreleme
+- Latency loglama ve performans izleme
+
+### 2. Android Uygulama Gelistirme (Kotlin)
+
+#### Mimari Yapi
+- MVVM (Model-View-ViewModel) tasarim deseni
+- Fragment tabanli navigasyon
+- LiveData ve ViewModel ile reaktif UI
+
+#### Ekranlar ve Ozellikler
+- **Ana Sayfa**: Tarif onerileri ve arama
+- **Envanter Yonetimi**: Kullanicinin malzemelerini ekleme/cikarma
+- **Tarif Detay**: Adim adim pisirme talimatlari
+- **Profil**: Kullanici tercihleri ve ayarlar
+
+#### Network Katmani
+- Retrofit ile REST API entegrasyonu
+- OkHttp interceptor ile loglama
+- 30 saniye timeout yapilandirmasi
+- BuildConfig ile ortam bazli URL yonetimi (debug/release)
+
+#### UI Bilesenleri
+- Material Design 3 uyumu
+- RecyclerView ile liste goruntuleme
+- CardView ile tarif kartlari
+- ConstraintLayout ile responsive tasarim
+- Glide ile gorsel yukleme
+
+---
+
+## Kullanilan Teknolojiler ve Araclar
+
+### Backend
+
+| Teknoloji | Versiyon | Kullanim Amaci |
+|-----------|----------|----------------|
+| Python | 3.x | Ana programlama dili |
+| FastAPI | - | REST API framework |
+| Uvicorn | - | ASGI server |
+| SQLAlchemy | - | ORM (Object-Relational Mapping) |
+| Alembic | - | Veritabani migration |
+| Pydantic | - | Veri validasyonu |
+
+### Android
+
+| Teknoloji | Versiyon | Kullanim Amaci |
+|-----------|----------|----------------|
+| Kotlin | - | Ana programlama dili |
+| Android SDK | 34 | Hedef platform |
+| Min SDK | 24 | Minimum desteklenen Android 7.0 |
+| Retrofit | 2.9.0 | HTTP client |
+| OkHttp | 4.12.0 | Network interceptor |
+| Gson | - | JSON parsing |
+| Glide | 4.16.0 | Gorsel yukleme |
+| Coroutines | 1.7.3 | Asenkron islemler |
+| Navigation Component | 2.7.6 | Ekran gecisleri |
+| Material Components | 1.11.0 | UI tasarim |
+| DataStore | 1.0.0 | Lokal veri saklama |
+
+### Gelistirme Araclari
+
+| Arac | Kullanim Amaci |
+|------|----------------|
+| Android Studio | Android IDE |
+| Git/GitHub | Versiyon kontrolu |
+| Gradle (Kotlin DSL) | Build sistemi |
+
+---
+
+## Proje Yapisi
 
 ```
 yemekonerisistemi/
-├── backend/                 # Python Backend (FastAPI)
-│   ├── api/                # API endpoint'leri
-│   ├── core/               # Öneri motoru, RAG sistemi
-│   ├── data/               # Veri dosyaları
-│   │   ├── raw/           # Ham veri
-│   │   ├── processed/     # İşlenmiş veri
-│   │   └── vectors/       # FAISS vektörleri
-│   ├── models/            # Veri modelleri
-│   ├── services/          # İş mantığı servisleri
-│   ├── utils/             # Yardımcı fonksiyonlar
-│   ├── tests/             # Unit testler
-│   └── config/            # Yapılandırma dosyaları
+├── backend/
+│   ├── api/                 # API endpoint tanimlari
+│   ├── db/                  # Veritabani modelleri
+│   ├── models/              # Pydantic modelleri
+│   ├── services/            # Is mantigi servisleri
+│   ├── data/                # Demo veri dosyalari
+│   ├── alembic/             # Migration dosyalari
+│   ├── scripts/             # Yardimci scriptler
+│   ├── main.py              # Uygulama giris noktasi
+│   └── requirements.txt     # Python bagimliliklari
 │
-├── android-app/            # Android Uygulaması (Kotlin)
-│   ├── app/               # Ana uygulama kodu
-│   ├── gradle/            # Gradle yapılandırması
-│   └── docs/              # Android dokümantasyonu
+├── android-app/
+│   └── app/src/main/
+│       ├── java/.../
+│       │   ├── api/         # Retrofit client ve servisler
+│       │   ├── models/      # Veri modelleri
+│       │   ├── ui/          # Fragment ve Activity
+│       │   └── adapters/    # RecyclerView adapterleri
+│       └── res/             # Layout, drawable, values
 │
-└── docs/                   # Proje dokümantasyonu
+├── scripts/                 # Calistirma scriptleri
+├── docs/                    # Proje dokumanlari
+└── README.md
 ```
-
-## 🚀 Özellikler
-
-### Temel Özellikler
-- ✅ Envanter tabanlı tarif önerisi
-- ✅ Kullanıcı alışkanlıklarını öğrenme
-- ✅ RAG ile açıklanabilir öneriler
-- ✅ Besin değeri hesaplama
-- ✅ Alerjik madde uyarıları
-
-### Gelişmiş Özellikler (Planlanan)
-- 🔄 Eksik malzeme tespiti ve alternatif öneriler
-- 🔄 Market listesi oluşturma
-- 🔄 Sosyal özellikler (tarif paylaşımı)
-- 🔄 Sesli asistan entegrasyonu
-
-## 💻 Teknoloji Yığını
-
-### Backend (Python)
-- **Framework:** FastAPI
-- **ML/NLP:** sentence-transformers, FAISS
-- **Veri İşleme:** pandas, numpy
-- **Veritabanı:** SQLite (development), PostgreSQL (production)
-
-### Frontend (Android)
-- **Dil:** Kotlin
-- **Min SDK:** 24 (Android 7.0)
-- **Mimari:** MVVM
-- **Network:** Retrofit + OkHttp
-- **Async:** Coroutines + Flow
-
-## 📦 Kurulum
-
-### Backend Kurulumu
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python main.py
-```
-
-### Android Kurulumu
-1. Android Studio'yu açın
-2. `android-app` klasörünü açın
-3. Gradle sync tamamlanmasını bekleyin
-4. Emulator veya fiziksel cihazda çalıştırın
-
-## 🧪 Test
-```bash
-# Backend testleri
-cd backend
-pytest tests/
-
-# Android testleri
-# Android Studio içinden çalıştırılır
-```
-
-## 📈 Geliştirme Fazları
-
-### Faz 1: Temel Sistem (Aktif) ✅
-- [x] Proje yapısı oluşturma
-- [ ] Veri seti hazırlama ve temizleme
-- [ ] Baseline öneri motoru
-- [ ] FastAPI ile REST API
-- [ ] Temel Android UI
-
-### Faz 2: RAG Entegrasyonu 🔄
-- [ ] FAISS vektör DB kurulumu
-- [ ] Embedding model entegrasyonu
-- [ ] RAG pipeline implementasyonu
-- [ ] Açıklanabilir öneriler
-
-### Faz 3: Kişiselleştirme 📅
-- [ ] Kullanıcı profili sistemi
-- [ ] Alışkanlık öğrenme modülü
-- [ ] Feedback loop implementasyonu
-
-## 📝 Lisans
-Bu proje Konya Teknik Üniversitesi Bilgisayar Mühendisliği Bölümü bitirme projesi kapsamında geliştirilmektedir.
-
-## 📧 İletişim
-**Geliştirici:** Ayşe Belen Pısdıl
-**E-posta:** [Üniversite e-postası]
-**LinkedIn:** [Profil linki]
 
 ---
-*Son güncelleme: 2025*
+
+## Calistirma
+
+### Backend
+```bash
+./scripts/run_backend.sh
+```
+Backend http://localhost:8000 adresinde calisir.
+API dokumantasyonu: http://localhost:8000/docs
+
+### Android
+1. Android Studio ile `android-app` klasorunu ac
+2. Gradle sync tamamlanmasini bekle
+3. Emulator veya fiziksel cihazda calistir
+
+---
+
+*Son guncelleme: Aralik 2025*
