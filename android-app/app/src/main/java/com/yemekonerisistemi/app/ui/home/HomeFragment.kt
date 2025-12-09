@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,12 +17,15 @@ import com.google.android.material.card.MaterialCardView
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.Recipe
 import com.yemekonerisistemi.app.ui.recipes.RecipeAdapter
+import kotlinx.coroutines.launch
 
 /**
  * Ana Sayfa / Dashboard Fragment
  * Spec Kit'e göre: Kişiselleştirilmiş öneriler, hızlı erişim, envanter özeti
  */
 class HomeFragment : Fragment() {
+
+    private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var inventoryCountText: TextView
     private lateinit var manageInventoryButton: MaterialButton
@@ -52,8 +57,8 @@ class HomeFragment : Fragment() {
         initViews(view)
         setupInventorySummary()
         setupQuickActions()
-        setupRecommendedRecipes()
-        setupTrendingRecipes()
+        setupRecyclerViews()
+        observeViewModel()
     }
 
     private fun initViews(view: View) {
@@ -112,34 +117,61 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupRecommendedRecipes() {
-        // Horizontal layout manager
+    private fun setupRecyclerViews() {
+        // Önerilen tarifler - Horizontal layout
         recommendedRecipesRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        // Önerilen tarifler (demo data)
-        val recommendedRecipes = getRecommendedRecipes()
-
-        recommendedAdapter = RecipeAdapter(recommendedRecipes) { recipe ->
+        recommendedAdapter = RecipeAdapter(emptyList()) { recipe ->
             navigateToRecipeDetail(recipe)
         }
-
         recommendedRecipesRecyclerView.adapter = recommendedAdapter
-    }
 
-    private fun setupTrendingRecipes() {
-        // Horizontal layout manager
+        // Popüler tarifler - Horizontal layout
         trendingRecipesRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-        // Popüler tarifler (demo data)
-        val trendingRecipes = getTrendingRecipes()
-
-        trendingAdapter = RecipeAdapter(trendingRecipes) { recipe ->
+        trendingAdapter = RecipeAdapter(emptyList()) { recipe ->
             navigateToRecipeDetail(recipe)
         }
-
         trendingRecipesRecyclerView.adapter = trendingAdapter
+    }
+
+    private fun observeViewModel() {
+        // Envanter sayısı
+        lifecycleScope.launch {
+            viewModel.inventoryCount.collect { count ->
+                inventoryCountText.text = getString(R.string.home_ingredients_available, count)
+            }
+        }
+
+        // Önerilen tarifler
+        lifecycleScope.launch {
+            viewModel.recommendedRecipes.collect { recipes ->
+                recommendedAdapter = RecipeAdapter(recipes) { recipe ->
+                    navigateToRecipeDetail(recipe)
+                }
+                recommendedRecipesRecyclerView.adapter = recommendedAdapter
+            }
+        }
+
+        // Popüler tarifler
+        lifecycleScope.launch {
+            viewModel.trendingRecipes.collect { recipes ->
+                trendingAdapter = RecipeAdapter(recipes) { recipe ->
+                    navigateToRecipeDetail(recipe)
+                }
+                trendingRecipesRecyclerView.adapter = trendingAdapter
+            }
+        }
+
+        // Hata durumu
+        lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                state.error?.let { error ->
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    viewModel.clearError()
+                }
+            }
+        }
     }
 
     // Navigation helpers
@@ -160,70 +192,5 @@ class HomeFragment : Fragment() {
     private fun navigateToRecipeDetail(recipe: Recipe) {
         // TODO: Recipe detail navigation implement edilecek
         Toast.makeText(context, "Tarif detayı: ${recipe.title}", Toast.LENGTH_SHORT).show()
-    }
-
-    // Demo data - Gerçekte backend'den gelecek
-    private fun getRecommendedRecipes(): List<Recipe> {
-        return listOf(
-            Recipe(
-                id = 1,
-                title = "Tavuk Sote",
-                cookingTime = 30,
-                calories = 280,
-                recommendationReason = "Envanterindeki tavuk ve sebzelerle mükemmel uyum!",
-                availableIngredients = "Tavuk, Domates, Biber",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 2,
-                title = "Menemen",
-                cookingTime = 15,
-                calories = 220,
-                recommendationReason = "Yumurta ve domateslerinle hızlı kahvaltı!",
-                availableIngredients = "Yumurta, Domates, Biber",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 3,
-                title = "Sebze Çorbası",
-                cookingTime = 25,
-                calories = 150,
-                recommendationReason = "Sebzelerini değerlendirmek için ideal",
-                availableIngredients = "Domates, Soğan, Biber",
-                imageUrl = ""
-            )
-        )
-    }
-
-    private fun getTrendingRecipes(): List<Recipe> {
-        return listOf(
-            Recipe(
-                id = 4,
-                title = "Kuru Fasulye",
-                cookingTime = 90,
-                calories = 350,
-                recommendationReason = "Bu hafta en çok yapılan tarif!",
-                availableIngredients = "Fasulye, Soğan",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 5,
-                title = "Mercimek Çorbası",
-                cookingTime = 35,
-                calories = 180,
-                recommendationReason = "Klasik lezzet, her zaman favoride",
-                availableIngredients = "Mercimek, Soğan",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 6,
-                title = "Makarna",
-                cookingTime = 20,
-                calories = 400,
-                recommendationReason = "Hızlı ve pratik!",
-                availableIngredients = "Makarna",
-                imageUrl = ""
-            )
-        )
     }
 }

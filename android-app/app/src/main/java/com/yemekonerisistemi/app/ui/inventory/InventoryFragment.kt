@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,13 +16,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.yemekonerisistemi.app.R
-import com.yemekonerisistemi.app.api.RetrofitClient
 import com.yemekonerisistemi.app.models.InventoryItem
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * Envanter (Buzdolabı) Fragment
@@ -31,6 +27,8 @@ import kotlinx.coroutines.withContext
  * - Miktar yönetimi
  */
 class InventoryFragment : Fragment() {
+
+    private val viewModel: InventoryViewModel by viewModels()
 
     private lateinit var searchEditText: TextInputEditText
     private lateinit var suggestionsCard: MaterialCardView
@@ -42,12 +40,6 @@ class InventoryFragment : Fragment() {
 
     private lateinit var inventoryAdapter: InventoryAdapter
     private lateinit var suggestionAdapter: SearchSuggestionAdapter
-
-    // Malzeme listesi (buzdolabı)
-    private val inventoryItems = mutableListOf<InventoryItem>()
-
-    // Arama job'ı (debouncing için)
-    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,7 +65,7 @@ class InventoryFragment : Fragment() {
         setupInventoryRecyclerView()
         setupSuggestionsRecyclerView()
 
-        // Real-time fuzzy search (Trendyol-style)
+        // Real-time fuzzy search
         setupRealTimeSearch()
 
         // Filtre butonu
@@ -85,9 +77,8 @@ class InventoryFragment : Fragment() {
         addButton.setOnClickListener {
             val ingredientName = searchEditText.text.toString().trim()
             if (ingredientName.isNotEmpty()) {
-                addIngredient(ingredientName)
+                viewModel.addIngredient(ingredientName)
                 searchEditText.text?.clear()
-                hideSuggestions()
             } else {
                 Toast.makeText(context, "Lütfen bir malzeme girin", Toast.LENGTH_SHORT).show()
             }
@@ -95,30 +86,27 @@ class InventoryFragment : Fragment() {
 
         // Tarif bulma butonu
         findRecipesButton.setOnClickListener {
-            if (inventoryItems.isNotEmpty()) {
+            if (viewModel.getTotalItemCount() > 0) {
                 findNavController().navigate(R.id.action_inventory_to_recipeList)
             } else {
                 Toast.makeText(context, "En az bir malzeme ekleyin", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Demo malzemeler ekle (ilk açılışta)
-        if (inventoryItems.isEmpty()) {
-            addSampleIngredients()
-        }
+        // ViewModel'i gözlemle
+        observeViewModel()
 
-        android.util.Log.d("InventoryFragment", "🚀 InventoryFragment initialized with RecyclerView suggestions")
+        android.util.Log.d("InventoryFragment", "🚀 InventoryFragment initialized with ViewModel")
     }
 
     private fun setupInventoryRecyclerView() {
         inventoryAdapter = InventoryAdapter(
-            items = inventoryItems,
-            onQuantityChanged = { _ ->
-                updateIngredientDisplay()
+            items = mutableListOf(),
+            onQuantityChanged = { item ->
+                viewModel.updateQuantity(item, item.quantity)
             },
             onItemDeleted = { item ->
-                Toast.makeText(context, "${item.name} silindi", Toast.LENGTH_SHORT).show()
-                updateIngredientDisplay()
+                viewModel.removeIngredient(item)
             }
         )
 
@@ -132,9 +120,8 @@ class InventoryFragment : Fragment() {
         suggestionAdapter = SearchSuggestionAdapter(
             onSuggestionClick = { ingredientName ->
                 // Öneriye tıklandığında malzeme ekle
-                addIngredient(ingredientName)
+                viewModel.addIngredient(ingredientName)
                 searchEditText.text?.clear()
-                hideSuggestions()
             }
         )
 
@@ -146,142 +133,68 @@ class InventoryFragment : Fragment() {
 
 
     /**
-     * Real-time fuzzy search setup (Trendyol benzeri)
-     * Backend'den canlı arama yapar ve RecyclerView'da gösterir
+     * Real-time fuzzy search setup
+     * ViewModel üzerinden arama yapar
      */
     private fun setupRealTimeSearch() {
         searchEditText.addTextChangedListener { editable ->
             val query = editable.toString().trim()
-
-            // Önceki arama job'ını iptal et (debouncing)
-            searchJob?.cancel()
-
-            // Eğer query boşsa önerileri gizle
-            if (query.isEmpty()) {
-                hideSuggestions()
-                return@addTextChangedListener
-            }
-
-            // En az 2 karakter girilmişse ara
-            if (query.length >= 2) {
-                searchJob = lifecycleScope.launch {
-                    // 300ms bekle (debouncing)
-                    delay(300)
-
-                    try {
-                        android.util.Log.d("InventoryFragment", "🔍 Fuzzy search: '$query'")
-
-                        // Backend'den fuzzy search ile ara (IO thread'de)
-                        val response = withContext(Dispatchers.IO) {
-                            RetrofitClient.apiService.searchIngredients(query, 20)
-                        }
-
-                        // Burası otomatik olarak Main thread'e döner
-                        android.util.Log.d("InventoryFragment", "📡 Response: ${response.code()}")
-
-                        if (response.isSuccessful && response.body() != null) {
-                            val results = response.body()!!.results
-                            val ingredientNames = results.map { it.name }
-
-                            android.util.Log.d("InventoryFragment", "✅ ${ingredientNames.size} sonuç: $ingredientNames")
-
-                            // UI güncelle (zaten Main thread'deyiz)
-                            if (ingredientNames.isNotEmpty()) {
-                                showSuggestions(ingredientNames)
-                            } else {
-                                hideSuggestions()
-                            }
-                        } else {
-                            android.util.Log.e("InventoryFragment", "❌ API error: ${response.code()}")
-                            hideSuggestions()
-                        }
-                    } catch (e: Exception) {
-                        android.util.Log.e("InventoryFragment", "💥 Search error: ${e.message}", e)
-                        e.printStackTrace()
-
-                        // Zaten Main thread'deyiz, direkt Toast göster
-                        Toast.makeText(
-                            context,
-                            "Backend hatası: ${e.message}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        hideSuggestions()
-                    }
-                }
-            } else {
-                hideSuggestions()
-            }
+            viewModel.searchIngredients(query)
         }
 
         android.util.Log.d("InventoryFragment", "🚀 Real-time fuzzy search aktif!")
     }
 
     /**
-     * Önerileri göster
+     * ViewModel'i gözlemle
      */
-    private fun showSuggestions(suggestions: List<String>) {
-        suggestionAdapter.updateSuggestions(suggestions)
-        suggestionsCard.visibility = View.VISIBLE
-        android.util.Log.d("InventoryFragment", "📋 Suggestions shown: ${suggestions.size} items")
-    }
-
-    /**
-     * Önerileri gizle
-     */
-    private fun hideSuggestions() {
-        suggestionsCard.visibility = View.GONE
-        suggestionAdapter.clearSuggestions()
-    }
-
-
-    /**
-     * Malzeme ekleme
-     */
-    private fun addIngredient(ingredientName: String) {
-        // Aynı isimde malzeme varsa miktarını artır
-        val existingItem = inventoryItems.find {
-            it.name.equals(ingredientName, ignoreCase = true)
+    private fun observeViewModel() {
+        // Envanter listesi
+        lifecycleScope.launch {
+            viewModel.inventoryItems.collect { items ->
+                inventoryAdapter.updateItems(items)
+                updateIngredientDisplay(items)
+            }
         }
 
-        if (existingItem != null) {
-            existingItem.quantity++
-            inventoryAdapter.updateItem(existingItem)
-            Toast.makeText(context, "$ingredientName miktarı artırıldı", Toast.LENGTH_SHORT).show()
-        } else {
-            // Yeni malzeme ekle
-            val newItem = InventoryItem(
-                name = ingredientName,
-                quantity = 1,
-                unit = "adet"
-            )
-            inventoryAdapter.addItem(newItem)
-            Toast.makeText(context, "$ingredientName eklendi", Toast.LENGTH_SHORT).show()
+        // Arama önerileri
+        lifecycleScope.launch {
+            viewModel.searchSuggestions.collect { suggestions ->
+                suggestionAdapter.updateSuggestions(suggestions)
+            }
         }
 
-        updateIngredientDisplay()
+        // UI durumu
+        lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                // Öneriler göster/gizle
+                suggestionsCard.visibility = if (state.showSuggestions) View.VISIBLE else View.GONE
+
+                // Hata mesajı
+                state.error?.let { error ->
+                    Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+                    viewModel.clearError()
+                }
+
+                // Aksiyon sonuçları
+                state.lastAction?.let { action ->
+                    val message = when (action) {
+                        is ActionResult.ItemAdded -> "${action.name} eklendi"
+                        is ActionResult.ItemRemoved -> "${action.name} silindi"
+                        is ActionResult.QuantityIncreased -> "${action.name} miktarı artırıldı"
+                    }
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    viewModel.clearLastAction()
+                }
+            }
+        }
     }
 
     /**
      * Buton metnini güncelle
      */
-    private fun updateIngredientDisplay() {
-        val totalItems = inventoryItems.sumOf { it.quantity }
-        findRecipesButton.text = "TARİFLERİ BUL 🍳 (${inventoryItems.size} çeşit, $totalItems adet)"
-    }
-
-    /**
-     * Demo malzemeler (ilk açılışta)
-     */
-    private fun addSampleIngredients() {
-        val sampleIngredients = listOf(
-            InventoryItem(name = "Yumurta", quantity = 6, unit = "adet"),
-            InventoryItem(name = "Domates", quantity = 3, unit = "adet"),
-            InventoryItem(name = "Tavuk Göğsü", quantity = 2, unit = "adet"),
-            InventoryItem(name = "Biber", quantity = 4, unit = "adet"),
-            InventoryItem(name = "Soğan", quantity = 2, unit = "adet")
-        )
-        inventoryItems.addAll(sampleIngredients)
-        inventoryAdapter.notifyDataSetChanged()
-        updateIngredientDisplay()
+    private fun updateIngredientDisplay(items: List<InventoryItem>) {
+        val totalItems = items.sumOf { it.quantity }
+        findRecipesButton.text = "TARİFLERİ BUL 🍳 (${items.size} çeşit, $totalItems adet)"
     }
 }

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -15,12 +17,15 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.Ingredient
 import com.yemekonerisistemi.app.models.Recipe
+import kotlinx.coroutines.launch
 
 /**
  * Tarif Detay Fragment
  * Spec Kit'e göre: Kapsamlı tarif görüntüleme, malzeme durumu, RAG açıklaması
  */
 class RecipeDetailFragment : Fragment() {
+
+    private val viewModel: RecipeDetailViewModel by viewModels()
 
     // UI Elements
     private lateinit var recipeTitleText: TextView
@@ -49,10 +54,6 @@ class RecipeDetailFragment : Fragment() {
     private lateinit var ingredientAdapter: IngredientDetailAdapter
     private lateinit var instructionAdapter: InstructionAdapter
 
-    // Data
-    private var currentRecipe: Recipe? = null
-    private var isFavorite = false
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,10 +66,12 @@ class RecipeDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews(view)
-        loadRecipeDetail()
-        setupIngredients()
-        setupInstructions()
+        setupRecyclerViews()
         setupButtons()
+        observeViewModel()
+
+        // Demo için recipeId 1 yükle
+        viewModel.loadRecipeDetail(1)
     }
 
     private fun initViews(view: View) {
@@ -96,62 +99,20 @@ class RecipeDetailFragment : Fragment() {
         instructionsRecyclerView = view.findViewById(R.id.instructionsRecyclerView)
     }
 
-    private fun loadRecipeDetail() {
-        // TODO: Backend'den recipeId'ye göre çek
-        // Şimdilik demo data
-        currentRecipe = getDemoRecipe()
-
-        currentRecipe?.let { recipe ->
-            recipeTitleText.text = recipe.title
-            cookingTimeText.text = getString(R.string.cooking_time_format, recipe.cookingTime)
-            caloriesText.text = getString(R.string.calorie_format, recipe.calories)
-            servingsText.text = getString(R.string.servings_format, recipe.servings)
-            recommendationReasonText.text = recipe.recommendationReason
-
-            // Nutrition (demo data)
-            nutritionCaloriesText.text = "${recipe.calories} kcal"
-            nutritionProteinText.text = "32g"
-            nutritionCarbsText.text = "15g"
-            nutritionFatText.text = "12g"
-        }
-    }
-
-    private fun setupIngredients() {
+    private fun setupRecyclerViews() {
         ingredientsRecyclerView.layoutManager = LinearLayoutManager(context)
-
-        val ingredients = getRecipeIngredients()
-        ingredientAdapter = IngredientDetailAdapter(ingredients)
+        ingredientAdapter = IngredientDetailAdapter(emptyList())
         ingredientsRecyclerView.adapter = ingredientAdapter
 
-        // Eksik malzeme sayısını hesapla
-        val missingCount = ingredients.count { !it.isAvailable }
-        if (missingCount > 0) {
-            addToShoppingListButton.text = "🛒 Eksik Malzemeleri Ekle ($missingCount)"
-            addToShoppingListButton.visibility = View.VISIBLE
-        } else {
-            addToShoppingListButton.visibility = View.GONE
-        }
-    }
-
-    private fun setupInstructions() {
         instructionsRecyclerView.layoutManager = LinearLayoutManager(context)
-
-        val instructions = getRecipeInstructions()
-        instructionAdapter = InstructionAdapter(instructions)
+        instructionAdapter = InstructionAdapter(emptyList())
         instructionsRecyclerView.adapter = instructionAdapter
     }
 
     private fun setupButtons() {
         // Favorilere ekle
         favoriteButton.setOnClickListener {
-            isFavorite = !isFavorite
-            if (isFavorite) {
-                favoriteButton.text = "💙 Favorilerimde"
-                Toast.makeText(context, getString(R.string.favorite_added), Toast.LENGTH_SHORT).show()
-            } else {
-                favoriteButton.text = "❤️ Favorilere Ekle"
-                Toast.makeText(context, getString(R.string.favorite_removed), Toast.LENGTH_SHORT).show()
-            }
+            viewModel.toggleFavorite()
         }
 
         // Paylaş
@@ -161,97 +122,105 @@ class RecipeDetailFragment : Fragment() {
 
         // Alışveriş listesine ekle
         addToShoppingListButton.setOnClickListener {
-            addMissingIngredientsToShoppingList()
+            viewModel.addMissingToShoppingList()
         }
 
         // Pişirmeye başla
         startCookingFab.setOnClickListener {
-            startCookingMode()
+            viewModel.startCookingMode()
         }
     }
 
+    private fun observeViewModel() {
+        // Tarif detayı
+        lifecycleScope.launch {
+            viewModel.recipe.collect { recipe ->
+                recipe?.let { updateRecipeUI(it) }
+            }
+        }
+
+        // Malzeme listesi
+        lifecycleScope.launch {
+            viewModel.ingredients.collect { ingredients ->
+                ingredientAdapter = IngredientDetailAdapter(ingredients)
+                ingredientsRecyclerView.adapter = ingredientAdapter
+            }
+        }
+
+        // Favori durumu
+        lifecycleScope.launch {
+            viewModel.isFavorite.collect { isFavorite ->
+                if (isFavorite) {
+                    favoriteButton.text = "💙 Favorilerimde"
+                } else {
+                    favoriteButton.text = "❤️ Favorilere Ekle"
+                }
+            }
+        }
+
+        // Eksik malzeme sayısı
+        lifecycleScope.launch {
+            viewModel.missingIngredientsCount.collect { count ->
+                if (count > 0) {
+                    addToShoppingListButton.text = "🛒 Eksik Malzemeleri Ekle ($count)"
+                    addToShoppingListButton.visibility = View.VISIBLE
+                } else {
+                    addToShoppingListButton.visibility = View.GONE
+                }
+            }
+        }
+
+        // UI durumu
+        lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                // Hata mesajı
+                state.error?.let { error ->
+                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    viewModel.clearError()
+                }
+
+                // Aksiyon sonuçları
+                state.lastAction?.let { action ->
+                    val message = when (action) {
+                        is DetailAction.AddedToFavorites -> getString(R.string.favorite_added)
+                        is DetailAction.RemovedFromFavorites -> getString(R.string.favorite_removed)
+                        is DetailAction.AddedToShoppingList -> "Eksik malzemeler alışveriş listesine eklendi!"
+                        is DetailAction.CookingModeStarted -> "Pişirme modu yakında! 👨‍🍳"
+                    }
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    viewModel.clearLastAction()
+                }
+            }
+        }
+    }
+
+    private fun updateRecipeUI(recipe: Recipe) {
+        recipeTitleText.text = recipe.title
+        cookingTimeText.text = getString(R.string.cooking_time_format, recipe.cookingTime)
+        caloriesText.text = getString(R.string.calorie_format, recipe.calories)
+        servingsText.text = getString(R.string.servings_format, recipe.servings)
+        recommendationReasonText.text = recipe.recommendationReason
+
+        // Nutrition (demo data)
+        nutritionCaloriesText.text = "${recipe.calories} kcal"
+        nutritionProteinText.text = "32g"
+        nutritionCarbsText.text = "15g"
+        nutritionFatText.text = "12g"
+
+        // Talimatlar
+        instructionAdapter = InstructionAdapter(recipe.instructions)
+        instructionsRecyclerView.adapter = instructionAdapter
+    }
+
     private fun shareRecipe() {
-        currentRecipe?.let { recipe ->
-            val shareText = """
-                ${recipe.title}
-
-                🕐 ${recipe.cookingTime} dakika
-                🔥 ${recipe.calories} kalori
-
-                ${recipe.recommendationReason}
-
-                Yemek Öneri Sistemi ile paylaşıldı.
-            """.trimIndent()
-
+        val shareText = viewModel.getShareText()
+        if (shareText.isNotEmpty()) {
             val intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, shareText)
                 type = "text/plain"
             }
-
             startActivity(Intent.createChooser(intent, "Tarifi Paylaş"))
         }
-    }
-
-    private fun addMissingIngredientsToShoppingList() {
-        // TODO: Backend'e eksik malzemeleri gönder
-        Toast.makeText(
-            context,
-            "Eksik malzemeler alışveriş listesine eklendi!",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
-    private fun startCookingMode() {
-        // TODO: Adım adım pişirme modu ekranına geç
-        Toast.makeText(
-            context,
-            "Pişirme modu yakında! 👨‍🍳",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-
-    // Demo Data Functions
-    private fun getDemoRecipe(): Recipe {
-        return Recipe(
-            id = 1,
-            title = "Tavuk Sote",
-            cookingTime = 30,
-            calories = 280,
-            servings = 4,
-            recommendationReason = "Bu tarif envanterinizdeki tavuk, domates ve biber ile mükemmel uyum sağlıyor. " +
-                    "Ayrıca günlük kalori hedefinize uygun ve protein değeri yüksek. " +
-                    "Hazırlanması kolay ve 30 dakikada hazır!",
-            availableIngredients = "Tavuk, Domates, Biber",
-            imageUrl = "",
-            instructions = getRecipeInstructions()
-        )
-    }
-
-    private fun getRecipeIngredients(): List<Ingredient> {
-        return listOf(
-            Ingredient(1, "Tavuk Göğsü", "500", "gram", "Et", isAvailable = true),
-            Ingredient(2, "Domates", "3", "adet", "Sebze", isAvailable = true),
-            Ingredient(3, "Yeşil Biber", "2", "adet", "Sebze", isAvailable = true),
-            Ingredient(4, "Soğan", "1", "adet", "Sebze", isAvailable = true),
-            Ingredient(5, "Sıvı Yağ", "2", "yemek kaşığı", "Yağ", isAvailable = false),
-            Ingredient(6, "Tuz", "1", "çay kaşığı", "Baharat", isAvailable = true),
-            Ingredient(7, "Karabiber", "1", "çay kaşığı", "Baharat", isAvailable = false)
-        )
-    }
-
-    private fun getRecipeInstructions(): List<String> {
-        return listOf(
-            "Tavuk göğüslerini küp şeklinde doğrayın ve tuzlayın.",
-            "Domatesleri ve biberleri küp şeklinde doğrayın.",
-            "Soğanı ince ince doğrayın.",
-            "Tavada sıvı yağı kızdırın ve tavukları ekleyin.",
-            "Tavuklar renk alana kadar kavurun (yaklaşık 5-7 dakika).",
-            "Soğanları ekleyip pembeleşene kadar kavurun.",
-            "Domatesleri ve biberleri ekleyin.",
-            "Kapağını kapatıp kısık ateşte sebzeler yumuşayana kadar pişirin (15-20 dakika).",
-            "Tuz ve karabiberle tatlandırın.",
-            "Sıcak servis yapın. Afiyet olsun!"
-        )
     }
 }

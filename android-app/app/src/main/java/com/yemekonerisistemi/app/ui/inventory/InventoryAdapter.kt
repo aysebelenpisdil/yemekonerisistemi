@@ -76,4 +76,10 @@ class InventoryAdapter(
             notifyItemChanged(index)
         }
     }
+
+    fun updateItems(newItems: List<InventoryItem>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
 }
