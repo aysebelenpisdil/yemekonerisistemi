@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.Recipe
+import com.yemekonerisistemi.app.ui.shared.SharedInventoryViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -24,6 +26,9 @@ import kotlinx.coroutines.launch
 class RecipeListFragment : Fragment() {
 
     private val viewModel: RecipeListViewModel by viewModels()
+
+    // Activity-scoped SharedViewModel - InventoryFragment'tan envanter al
+    private val sharedInventoryViewModel: SharedInventoryViewModel by activityViewModels()
 
     private lateinit var recipesRecyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
@@ -50,6 +55,9 @@ class RecipeListFragment : Fragment() {
 
         // ViewModel'i gözlemle
         observeViewModel()
+
+        // SharedInventory'den gerçek malzemeleri al ve tarifleri yükle
+        loadRecipesFromInventory()
     }
 
     private fun setupRecyclerView() {
@@ -100,13 +108,37 @@ class RecipeListFragment : Fragment() {
     }
 
     /**
-     * Tarif detayına git
+     * SharedViewModel'den gerçek envanter verisiyle tarifleri yükle
+     */
+    private fun loadRecipesFromInventory() {
+        lifecycleScope.launch {
+            sharedInventoryViewModel.inventoryItems.collect { items ->
+                val ingredientNames = items.map { it.name }
+                if (ingredientNames.isNotEmpty()) {
+                    // Gerçek envanter malzemelerini kullan
+                    viewModel.loadRecipes(ingredientNames)
+
+                    android.util.Log.d(
+                        "RecipeListFragment",
+                        "🥗 Envanter malzemeleri ile tarif aranıyor: $ingredientNames"
+                    )
+                } else {
+                    // Envanter boşsa kullanıcıyı bilgilendir
+                    viewModel.loadRecipes(emptyList())
+                }
+            }
+        }
+    }
+
+    /**
+     * Tarif detayına git - Recipe ID ile
      */
     private fun navigateToRecipeDetail(recipe: Recipe) {
         try {
-            findNavController().navigate(R.id.action_recipeList_to_recipeDetail)
+            val bundle = bundleOf("recipeId" to recipe.id)
+            findNavController().navigate(R.id.action_recipeList_to_recipeDetail, bundle)
         } catch (e: Exception) {
-            Toast.makeText(context, "Tarif detayı açılamadı", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Tarif detayı açılamadı: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -1,9 +1,14 @@
 package com.yemekonerisistemi.app.ui.inventory
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yemekonerisistemi.app.api.RetrofitClient
+import com.yemekonerisistemi.app.api.SemanticSearchRequest
+import com.yemekonerisistemi.app.data.DemoDataProvider
+import com.yemekonerisistemi.app.data.repository.InventoryRepository
 import com.yemekonerisistemi.app.models.InventoryItem
+import com.yemekonerisistemi.app.models.Recipe
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,32 +17,61 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 /**
- * Envanter (Buzdolabı) ekranı için ViewModel
- * Malzeme listesi yönetimi, arama, ekleme/silme işlemleri
+ * Envanter ViewModel - Room Database ile persist
  */
-class InventoryViewModel : ViewModel() {
+class InventoryViewModel(application: Application) : AndroidViewModel(application) {
 
-    // UI State
+    private val repository = InventoryRepository(application)
+
     private val _uiState = MutableStateFlow(InventoryUiState())
     val uiState: StateFlow<InventoryUiState> = _uiState.asStateFlow()
 
-    // Envanter listesi
     private val _inventoryItems = MutableStateFlow<List<InventoryItem>>(emptyList())
     val inventoryItems: StateFlow<List<InventoryItem>> = _inventoryItems.asStateFlow()
 
-    // Arama önerileri
     private val _searchSuggestions = MutableStateFlow<List<String>>(emptyList())
     val searchSuggestions: StateFlow<List<String>> = _searchSuggestions.asStateFlow()
 
-    // Arama sorgusu
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    // Debounce için search job
     private var searchJob: Job? = null
 
+    private val _semanticResults = MutableStateFlow<List<Recipe>>(emptyList())
+    val semanticResults: StateFlow<List<Recipe>> = _semanticResults.asStateFlow()
+
+    private val _isSemanticMode = MutableStateFlow(false)
+    val isSemanticMode: StateFlow<Boolean> = _isSemanticMode.asStateFlow()
+
     init {
-        loadSampleIngredients()
+        loadInventoryFromDatabase()
+    }
+
+    /**
+     * Database'den envanter yükle
+     */
+    private fun loadInventoryFromDatabase() {
+        viewModelScope.launch {
+            repository.getAllItems().collect { items ->
+                _inventoryItems.value = items
+
+                // İlk kez açılıyorsa demo data ekle
+                if (items.isEmpty()) {
+                    loadSampleIngredients()
+                }
+            }
+        }
+    }
+
+    /**
+     * Demo malzemeler (ilk açılış için)
+     */
+    private fun loadSampleIngredients() {
+        viewModelScope.launch {
+            DemoDataProvider.getDemoInventoryItems().forEach { item ->
+                repository.addItem(item)
+            }
+        }
     }
 
     /**
@@ -92,65 +126,58 @@ class InventoryViewModel : ViewModel() {
     }
 
     /**
-     * Malzeme ekle
+     * Malzeme ekle - Database'e kaydet
      */
     fun addIngredient(ingredientName: String) {
-        val currentItems = _inventoryItems.value.toMutableList()
+        viewModelScope.launch {
+            val existingItem = _inventoryItems.value.find {
+                it.name.equals(ingredientName, ignoreCase = true)
+            }
 
-        // Aynı malzeme varsa miktarını artır
-        val existingItem = currentItems.find {
-            it.name.equals(ingredientName, ignoreCase = true)
+            if (existingItem != null) {
+                val updatedItem = existingItem.copy(quantity = existingItem.quantity + 1)
+                repository.updateItem(updatedItem)
+                _uiState.value = _uiState.value.copy(
+                    lastAction = ActionResult.QuantityIncreased(ingredientName)
+                )
+            } else {
+                val newItem = InventoryItem(
+                    name = ingredientName,
+                    quantity = 1,
+                    unit = "adet"
+                )
+                repository.addItem(newItem)
+                _uiState.value = _uiState.value.copy(
+                    lastAction = ActionResult.ItemAdded(ingredientName)
+                )
+            }
+            clearSearch()
         }
-
-        if (existingItem != null) {
-            val index = currentItems.indexOf(existingItem)
-            currentItems[index] = existingItem.copy(quantity = existingItem.quantity + 1)
-            _uiState.value = _uiState.value.copy(
-                lastAction = ActionResult.QuantityIncreased(ingredientName)
-            )
-        } else {
-            val newItem = InventoryItem(
-                name = ingredientName,
-                quantity = 1,
-                unit = "adet"
-            )
-            currentItems.add(newItem)
-            _uiState.value = _uiState.value.copy(
-                lastAction = ActionResult.ItemAdded(ingredientName)
-            )
-        }
-
-        _inventoryItems.value = currentItems
-        clearSearch()
     }
 
     /**
-     * Malzeme sil
+     * Malzeme sil - Database'den kaldır
      */
     fun removeIngredient(item: InventoryItem) {
-        val currentItems = _inventoryItems.value.toMutableList()
-        currentItems.remove(item)
-        _inventoryItems.value = currentItems
-        _uiState.value = _uiState.value.copy(
-            lastAction = ActionResult.ItemRemoved(item.name)
-        )
+        viewModelScope.launch {
+            repository.deleteItem(item)
+            _uiState.value = _uiState.value.copy(
+                lastAction = ActionResult.ItemRemoved(item.name)
+            )
+        }
     }
 
     /**
      * Malzeme miktarını güncelle
      */
     fun updateQuantity(item: InventoryItem, newQuantity: Int) {
-        if (newQuantity <= 0) {
-            removeIngredient(item)
-            return
-        }
-
-        val currentItems = _inventoryItems.value.toMutableList()
-        val index = currentItems.indexOfFirst { it.id == item.id }
-
-        if (index != -1) {
-            currentItems[index] = item.copy(quantity = newQuantity)
-            _inventoryItems.value = currentItems
+        viewModelScope.launch {
+            if (newQuantity <= 0) {
+                removeIngredient(item)
+            } else {
+                val updatedItem = item.copy(quantity = newQuantity)
+                repository.updateItem(updatedItem)
+            }
         }
     }
 
@@ -193,16 +220,47 @@ class InventoryViewModel : ViewModel() {
     fun getIngredientNames(): List<String> = _inventoryItems.value.map { it.name }
 
     /**
-     * Demo malzemeler
+     * Doğal dil ile semantik arama
+     * Örnek: "hafif bir akşam yemeği", "protein ağırlıklı tarif"
      */
-    private fun loadSampleIngredients() {
-        _inventoryItems.value = listOf(
-            InventoryItem(name = "Yumurta", quantity = 6, unit = "adet"),
-            InventoryItem(name = "Domates", quantity = 3, unit = "adet"),
-            InventoryItem(name = "Tavuk Göğsü", quantity = 2, unit = "adet"),
-            InventoryItem(name = "Biber", quantity = 4, unit = "adet"),
-            InventoryItem(name = "Soğan", quantity = 2, unit = "adet")
-        )
+    fun semanticSearch(query: String) {
+        if (query.length < 3) {
+            _semanticResults.value = emptyList()
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isSearching = true)
+            _isSemanticMode.value = true
+
+            try {
+                val request = SemanticSearchRequest(
+                    query = query,
+                    searchType = "recipes",
+                    limit = 10
+                )
+
+                val response = RetrofitClient.apiService.semanticSearch(request)
+
+                if (response.isSuccessful && response.body() != null) {
+                    _semanticResults.value = response.body()!!.results
+                } else {
+                    _semanticResults.value = emptyList()
+                }
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = "Semantik arama şu an kullanılamıyor")
+            } finally {
+                _uiState.value = _uiState.value.copy(isSearching = false)
+            }
+        }
+    }
+
+    /**
+     * Semantik moddan çık
+     */
+    fun exitSemanticMode() {
+        _isSemanticMode.value = false
+        _semanticResults.value = emptyList()
     }
 }
 

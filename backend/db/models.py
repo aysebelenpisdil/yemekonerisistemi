@@ -54,6 +54,11 @@ class Recipe(Base):
     image_thumb_url = Column(String(500), nullable=True)
     instructions = Column(Text, nullable=True)  # JSON array as string
 
+    # Popularity tracking
+    popularity_score = Column(Float, default=0.5)
+    view_count = Column(Integer, default=0)
+    favorite_count = Column(Integer, default=0)
+
     ingredients = relationship("Ingredient", secondary=recipe_ingredients, back_populates="recipes")
 
 class Embedding(Base):

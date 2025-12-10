@@ -16,26 +16,60 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
+        // Default API URL (emulator için)
         buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8000\"")
     }
 
     buildTypes {
         debug {
+            isDebuggable = true
+            // Emulator için localhost
             buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8000\"")
         }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "API_BASE_URL", "\"https://api.ornek-site.com\"")
+            // Production URL - değiştirilmeli
+            buildConfigField("String", "API_BASE_URL", "\"https://api.yemekonerisistemi.com\"")
+        }
+    }
+    
+    // Flavor'lar ile farklı ortamlar (opsiyonel)
+    flavorDimensions += "environment"
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8000\"")
+        }
+        create("staging") {
+            dimension = "environment"
+            applicationIdSuffix = ".staging"
+            versionNameSuffix = "-staging"
+            buildConfigField("String", "API_BASE_URL", "\"https://staging-api.yemekonerisistemi.com\"")
+        }
+        create("prod") {
+            dimension = "environment"
+            buildConfigField("String", "API_BASE_URL", "\"https://api.yemekonerisistemi.com\"")
         }
     }
 
     buildFeatures {
-        viewBinding = true
         buildConfig = true
+        viewBinding = true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }
 
@@ -77,6 +111,15 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+    
+    // KSP for Room (Kotlin Symbol Processing)
+    // Eğer kapt kullanıyorsanız:
+    // kapt("androidx.room:room-compiler:2.6.1")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

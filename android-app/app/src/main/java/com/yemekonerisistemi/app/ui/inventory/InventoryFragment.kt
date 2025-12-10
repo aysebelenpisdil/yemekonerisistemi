@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.InventoryItem
+import com.yemekonerisistemi.app.ui.shared.SharedInventoryViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -29,6 +31,9 @@ import kotlinx.coroutines.launch
 class InventoryFragment : Fragment() {
 
     private val viewModel: InventoryViewModel by viewModels()
+
+    // Activity-scoped SharedViewModel - RecipeListFragment ile paylaşım için
+    private val sharedInventoryViewModel: SharedInventoryViewModel by activityViewModels()
 
     private lateinit var searchEditText: TextInputEditText
     private lateinit var suggestionsCard: MaterialCardView
@@ -154,6 +159,9 @@ class InventoryFragment : Fragment() {
             viewModel.inventoryItems.collect { items ->
                 inventoryAdapter.updateItems(items)
                 updateIngredientDisplay(items)
+
+                // SharedViewModel'e bildir
+                sharedInventoryViewModel.updateInventory(items)
             }
         }
 

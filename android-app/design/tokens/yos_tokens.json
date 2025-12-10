@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "name": "YemekOneriSistemi Calm Theme",
+    "version": "0.1.0",
+    "description": "Sakin/meditasyon esintili özgün tema – telif ihlali yok."
+  },
+  "color": {
+    "brand": {
+      "50": "#F3F5FF",
+      "100": "#E6EBFF",
+      "200": "#CBD7FE",
+      "300": "#A4BBFB",
+      "400": "#7E9EF4",
+      "500": "#5F83EB",
+      "600": "#4968D3",
+      "700": "#394FB1",
+      "800": "#2F418E",
+      "900": "#2A386F"
+    },
+    "accent": { "500": "#56C7BD", "600": "#39B6AE" },
+    "surface": {
+      "light": { "base": "#FFFFFF", "elev1": "#F6F7FB", "elev2": "#EFF1F8" },
+      "dark": { "base": "#0F1220", "elev1": "#161A2B", "elev2": "#1B2033" }
+    },
+    "text": {
+      "light": { "primary": "#111322", "secondary": "#3E4460", "muted": "#6D7392" },
+      "dark": { "primary": "#FFFFFF", "secondary": "#C7CBE2", "muted": "#9AA0BD" }
+    },
+    "state": { "success": "#4FCB8D", "warning": "#F4C34C", "error": "#FF6B6B" },
+    "gradient": {
+      "calmA": ["#2F418E", "#5F83EB"],
+      "calmB": ["#344968", "#56C7BD"]
+    }
+  },
+  "typography": {
+    "family": { "sans": "Inter, Manrope, system-ui" },
+    "scale": {
+      "display": { "size": 32, "weight": 700, "line": 40 },
+      "h1": { "size": 24, "weight": 700, "line": 32 },
+      "h2": { "size": 20, "weight": 600, "line": 28 },
+      "body": { "size": 16, "weight": 500, "line": 24 },
+      "label": { "size": 14, "weight": 600, "line": 20 }
+    }
+  },
+  "shape": { "radius": { "xs": 8, "sm": 12, "md": 16, "lg": 24, "pill": 999 } },
+  "spacing": { "xs": 4, "sm": 8, "md": 12, "lg": 16, "xl": 24, "xxl": 32 },
+  "elevation": {
+    "card": "0dp 4dp 12dp rgba(0,0,0,0.18)",
+    "sheet": "0dp 8dp 24dp rgba(0,0,0,0.26)"
+  },
+  "motion": { "fast": 160, "base": 220, "slow": 280, "curve": { "inOut": "cubic-bezier(0.4,0,0.2,1)" } },
+  "components": {
+    "buttonPrimary": {
+      "bg": "{color.brand.700}",
+      "bgPressed": "{color.brand.800}",
+      "fg": "{color.text.dark.primary}",
+      "radius": "{shape.radius.pill}",
+      "px": "{spacing.xl}",
+      "py": "{spacing.sm}"
+    },
+    "card": {
+      "bgLight": "{color.surface.light.elev1}",
+      "bgDark": "{color.surface.dark.elev1}",
+      "radius": "{shape.radius.lg}",
+      "padding": "{spacing.lg}"
+    },
+    "chip": {
+      "bg": "#1D2A45",
+      "fg": "{color.text.dark.secondary}",
+      "radius": "{shape.radius.pill}"
+    }
+  }
+}

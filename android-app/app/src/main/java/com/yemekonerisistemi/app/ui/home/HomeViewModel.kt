@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yemekonerisistemi.app.api.RecipeRecommendationRequest
 import com.yemekonerisistemi.app.api.RetrofitClient
+import com.yemekonerisistemi.app.data.DemoDataProvider
 import com.yemekonerisistemi.app.models.Recipe
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,9 +44,8 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun loadInventoryCount() {
-        // TODO: Backend'den gerçek envanter sayısını çek
-        // Şimdilik demo değer
-        _inventoryCount.value = 12
+        // Demo değer - SharedViewModel entegrasyonu HomeFragment'ta yapılacak
+        _inventoryCount.value = DemoDataProvider.getDemoInventoryCount()
     }
 
     private fun loadRecommendedRecipes() {
@@ -61,10 +61,10 @@ class HomeViewModel : ViewModel() {
                 if (response.isSuccessful && response.body() != null) {
                     _recommendedRecipes.value = response.body()!!.recipes
                 } else {
-                    _recommendedRecipes.value = getDemoRecommendedRecipes()
+                    _recommendedRecipes.value = DemoDataProvider.getRecommendedRecipes()
                 }
             } catch (e: Exception) {
-                _recommendedRecipes.value = getDemoRecommendedRecipes()
+                _recommendedRecipes.value = DemoDataProvider.getRecommendedRecipes()
                 _uiState.value = _uiState.value.copy(error = e.message)
             } finally {
                 _uiState.value = _uiState.value.copy(isLoadingRecommended = false)
@@ -77,9 +77,9 @@ class HomeViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(isLoadingTrending = true)
             try {
                 // TODO: Backend'de trending endpoint eklendiğinde güncellenecek
-                _trendingRecipes.value = getDemoTrendingRecipes()
+                _trendingRecipes.value = DemoDataProvider.getTrendingRecipes()
             } catch (e: Exception) {
-                _trendingRecipes.value = getDemoTrendingRecipes()
+                _trendingRecipes.value = DemoDataProvider.getTrendingRecipes()
                 _uiState.value = _uiState.value.copy(error = e.message)
             } finally {
                 _uiState.value = _uiState.value.copy(isLoadingTrending = false)
@@ -87,77 +87,16 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun updateInventoryCount(count: Int) {
+    /**
+     * SharedViewModel'den envanter sayısını güncelle
+     * HomeFragment'tan çağrılacak
+     */
+    fun updateInventoryFromShared(count: Int) {
         _inventoryCount.value = count
     }
 
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
-    }
-
-    // Demo data
-    private fun getDemoRecommendedRecipes(): List<Recipe> {
-        return listOf(
-            Recipe(
-                id = 1,
-                title = "Tavuk Sote",
-                cookingTime = 30,
-                calories = 280,
-                recommendationReason = "Envanterindeki tavuk ve sebzelerle mükemmel uyum!",
-                availableIngredients = "Tavuk, Domates, Biber",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 2,
-                title = "Menemen",
-                cookingTime = 15,
-                calories = 220,
-                recommendationReason = "Yumurta ve domateslerinle hızlı kahvaltı!",
-                availableIngredients = "Yumurta, Domates, Biber",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 3,
-                title = "Sebze Çorbası",
-                cookingTime = 25,
-                calories = 150,
-                recommendationReason = "Sebzelerini değerlendirmek için ideal",
-                availableIngredients = "Domates, Soğan, Biber",
-                imageUrl = ""
-            )
-        )
-    }
-
-    private fun getDemoTrendingRecipes(): List<Recipe> {
-        return listOf(
-            Recipe(
-                id = 4,
-                title = "Kuru Fasulye",
-                cookingTime = 90,
-                calories = 350,
-                recommendationReason = "Bu hafta en çok yapılan tarif!",
-                availableIngredients = "Fasulye, Soğan",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 5,
-                title = "Mercimek Çorbası",
-                cookingTime = 35,
-                calories = 180,
-                recommendationReason = "Klasik lezzet, her zaman favoride",
-                availableIngredients = "Mercimek, Soğan",
-                imageUrl = ""
-            ),
-            Recipe(
-                id = 6,
-                title = "Makarna",
-                cookingTime = 20,
-                calories = 400,
-                recommendationReason = "Hızlı ve pratik!",
-                availableIngredients = "Makarna",
-                imageUrl = ""
-            )
-        )
     }
 }
 

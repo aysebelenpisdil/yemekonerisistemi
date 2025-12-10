@@ -18,6 +18,7 @@ import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.Recipe
 import com.yemekonerisistemi.app.ui.recipes.RecipeAdapter
 import kotlinx.coroutines.launch
+import androidx.core.os.bundleOf
 
 /**
  * Ana Sayfa / Dashboard Fragment
@@ -107,13 +108,21 @@ class HomeFragment : Fragment() {
         }
 
         mealPlannerCard.setOnClickListener {
-            // TODO: Yemek planlayıcı ekranına git
-            Toast.makeText(context, "Yemek Planlayıcı yakında!", Toast.LENGTH_SHORT).show()
+            // Gelecek özellik - UI'da disabled göster veya bilgilendir
+            Toast.makeText(
+                context,
+                "Yemek Planlayıcı geliştirme aşamasında 🚧\nYakında kullanıma sunulacak!",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
         shoppingListCard.setOnClickListener {
-            // TODO: Alışveriş listesi ekranına git
-            Toast.makeText(context, "Alışveriş Listesi yakında!", Toast.LENGTH_SHORT).show()
+            // Gelecek özellik - UI'da disabled göster veya bilgilendir
+            Toast.makeText(
+                context,
+                "Alışveriş Listesi geliştirme aşamasında 🚧\nYakında kullanıma sunulacak!",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -190,7 +199,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToRecipeDetail(recipe: Recipe) {
-        // TODO: Recipe detail navigation implement edilecek
-        Toast.makeText(context, "Tarif detayı: ${recipe.title}", Toast.LENGTH_SHORT).show()
+        try {
+            // Bottom navigation ile recipes tab'ına geç, sonra detaya git
+            val bundle = bundleOf("recipeId" to recipe.id)
+            findNavController().navigate(R.id.navigation_recipes, bundle)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Tarif: ${recipe.title}", Toast.LENGTH_SHORT).show()
+        }
     }
 }

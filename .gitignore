@@ -1,114 +1,76 @@
-# Python
+# ============================================
+# Yemek Öneri Sistemi - Git Ignore
+# ============================================
+
+# === ENVIRONMENT & SECRETS ===
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+credentials/
+
+# === PYTHON ===
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 venv/
+.venv/
 ENV/
-env/
-.venv
+.eggs/
+*.egg-info/
+dist/
+build/
+*.egg
 
-# PyCharm
-.idea/
-
-# VS Code
-.vscode/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Data files
-*.csv
-*.json
-*.pkl
-*.h5
+# === DATABASE ===
 *.db
 *.sqlite
 *.sqlite3
+yemek_oneri.db
 
-# FAISS indexes
-*.index
-*.faiss
+# === ANDROID ===
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
 
-# Environment variables
-.env
-.env.local
-*.env
+# Local configuration file
+local.properties
 
-# Android
-android-app/.gradle/
-android-app/.idea/
-android-app/local.properties
-android-app/build/
-android-app/app/build/
-android-app/*.iml
-android-app/app/*.iml
-android-app/captures/
-android-app/.externalNativeBuild/
-android-app/.cxx/
+# Android Studio
+*.iml
+.idea/
+*.jks
+*.keystore
+signing/
+
+# APK files
 *.apk
 *.aab
-*.ap_
-*.dex
-*.class
 
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
-desktop.ini
-
-# Microsoft Office files
-*.docx
-*.xlsx
-*.pptx
-~$*.docx
-~$*.xlsx
-~$*.pptx
-*.tmp
-
-# Large dataset files
-data/
-
-# Logs
+# === LOGS ===
 *.log
 logs/
 
-# Secrets and credentials
-credentials/
-secrets/
-*.key
-*.pem
-*.crt
+# === IDE ===
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
 
-# Model files (genellikle büyük)
-models/*.bin
-models/*.pt
-models/*.pth
-models/*.onnx
-
-# Test coverage
-htmlcov/
+# === TEST ===
 .coverage
+htmlcov/
 .pytest_cache/
+.tox/
 
-# Documentation build
-docs/_build/
+# === MISC ===
+*.bak
+*.tmp
+*.temp

@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "title": "Tavuk Sote",
+    "cooking_time": 30,
+    "calories": 280,
+    "servings": 4,
+    "recommendation_reason": "Tavuk ve sebzelerinle mukemmel uyum! Protein degeri yuksek ve hazirlanmasi kolay.",
+    "available_ingredients": "Tavuk, Domates, Biber",
+    "image_url": "",
+    "instructions": [
+      "Tavuk goguslerini kup seklinde dograyin ve tuzlayin",
+      "Domatesleri ve biberleri kup seklinde dograyin",
+      "Sogani ince ince dograyin",
+      "Tavada sivi yagi kizdirin ve tavuklari ekleyin",
+      "Tavuklar renk alana kadar kavurun (yaklasik 5-7 dakika)",
+      "Soganlari ekleyip pembelesene kadar kavurun",
+      "Domatesleri ve biberleri ekleyin",
+      "Kapagini kapatip kisik ateste sebzeler yumusayana kadar pisirin (15-20 dakika)",
+      "Tuz ve karabiberle tatlendirin",
+      "Sicak servis yapin. Afiyet olsun!"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Kremali Makarna",
+    "cooking_time": 20,
+    "calories": 420,
+    "servings": 2,
+    "recommendation_reason": "Hizli yemek tercihine uygun! 20 dakikada hazir ve lezzetli.",
+    "available_ingredients": "Makarna, Yogurt, Tereyagi",
+    "image_url": "",
+    "instructions": [
+      "Makarnayi tuzlu suda haslayin",
+      "Tavada tereyagini eritin",
+      "Yogurdu ekleyip karistirin",
+      "Haslanmis makarnayi suzun",
+      "Kremali sos ile karistirin",
+      "Sicak servis yapin"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Sebze Corbasi",
+    "cooking_time": 25,
+    "calories": 150,
+    "servings": 4,
+    "recommendation_reason": "Saglikli ve hafif bir secim. Vitamin deposu!",
+    "available_ingredients": "Domates, Sogan, Biber, Havuc",
+    "image_url": "",
+    "instructions": [
+      "Sebzeleri kup dograyin",
+      "Sogani kavurun",
+      "Diger sebzeleri ekleyin",
+      "Su ekleyip kaynatin",
+      "20 dakika pisirin",
+      "Tuz ve baharatla tatlendirin"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Yumurtali Menemen",
+    "cooking_time": 15,
+    "calories": 220,
+    "servings": 2,
+    "recommendation_reason": "Kahvaltinin vazgecilmezi! Yumurta ve sebzelerinizle enfes bir lezzet.",
+    "available_ingredients": "Yumurta, Domates, Biber",
+    "image_url": "",
+    "instructions": [
+      "Biberleri ince dograyin ve kavurun",
+      "Domatesleri ekleyin ve suyunu cekmesini bekleyin",
+      "Yumurtalari kirip karistirin",
+      "Pisirin ve servis yapin"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Et Sote",
+    "cooking_time": 40,
+    "calories": 350,
+    "servings": 4,
+    "recommendation_reason": "Protein ihtiyacinizi karsilayan doyurucu bir ana yemek.",
+    "available_ingredients": "Et, Sogan, Domates",
+    "image_url": "",
+    "instructions": [
+      "Eti kup dograyin",
+      "Soganlari kavurun",
+      "Eti ekleyip renk almasini saglayin",
+      "Domates ve baharatlari ekleyin",
+      "30 dakika kisik ateste pisirin"
+    ]
+  }
+]

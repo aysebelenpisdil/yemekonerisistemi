@@ -65,15 +65,21 @@ def seed_ingredients(session):
 
 def seed_recipes(session):
     """Seed sample recipes"""
-    # Sample recipes for POC
+    # Gerçek Unsplash görselleri
+    DEFAULT_IMAGES = [
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400",
+        "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400",
+        "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400",
+    ]
+
     recipes = [
         {
             "title": "Domates Salatası",
             "cooking_time": 10,
             "calories": 150,
             "servings": 2,
-            "image_url": "https://example.com/domates-salatasi.jpg",
-            "image_thumb_url": "https://example.com/domates-salatasi-thumb.jpg",
+            "image_url": DEFAULT_IMAGES[0],
+            "image_thumb_url": DEFAULT_IMAGES[0],
             "instructions": json.dumps(["Domatesleri dilimleyin", "Soğan ekleyin", "Zeytinyağı ve limon ekleyin"])
         },
         {
@@ -81,8 +87,8 @@ def seed_recipes(session):
             "cooking_time": 30,
             "calories": 250,
             "servings": 4,
-            "image_url": "https://example.com/mercimek-corbasi.jpg",
-            "image_thumb_url": "https://example.com/mercimek-corbasi-thumb.jpg",
+            "image_url": DEFAULT_IMAGES[1],
+            "image_thumb_url": DEFAULT_IMAGES[1],
             "instructions": json.dumps(["Mercimeği haşlayın", "Sebzeleri ekleyin", "Blenderdan geçirin"])
         },
         {
@@ -90,8 +96,8 @@ def seed_recipes(session):
             "cooking_time": 25,
             "calories": 200,
             "servings": 4,
-            "image_url": "https://example.com/pilav.jpg",
-            "image_thumb_url": "https://example.com/pilav-thumb.jpg",
+            "image_url": DEFAULT_IMAGES[2],
+            "image_thumb_url": DEFAULT_IMAGES[2],
             "instructions": json.dumps(["Pirinci yıkayın", "Tereyağında kavurun", "Su ekleyip pişirin"])
         }
     ]

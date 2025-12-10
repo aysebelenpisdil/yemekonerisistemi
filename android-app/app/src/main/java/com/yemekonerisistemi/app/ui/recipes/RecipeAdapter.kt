@@ -5,56 +5,65 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.Recipe
 
+/**
+ * RecyclerView Adapter for Recipe list
+ * DiffUtil ile optimize edilmiş
+ */
 class RecipeAdapter(
-    private val recipes: List<Recipe>,
+    private var recipes: List<Recipe> = emptyList(),
     private val onRecipeClick: (Recipe) -> Unit
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
 
     inner class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val recipeImage: ImageView = itemView.findViewById(R.id.recipeImage)
-        val recipeTitle: TextView = itemView.findViewById(R.id.recipeTitle)
-        val timeText: TextView = itemView.findViewById(R.id.timeText)
-        val calorieText: TextView = itemView.findViewById(R.id.calorieText)
-        val recommendationReason: TextView = itemView.findViewById(R.id.recommendationReason)
-        val availableIngredients: TextView = itemView.findViewById(R.id.availableIngredients)
+        private val recipeImage: ImageView? = itemView.findViewById(R.id.recipeImage)
+        private val recipeTitle: TextView? = itemView.findViewById(R.id.recipeTitle)
+        private val cookingTime: TextView? = itemView.findViewById(R.id.cookingTime)
+        private val calories: TextView? = itemView.findViewById(R.id.calories)
+        private val matchedIngredients: TextView? = itemView.findViewById(R.id.matchedIngredients)
 
         fun bind(recipe: Recipe) {
-            recipeTitle.text = recipe.title
-            timeText.text = "⏱️ ${recipe.cookingTime} dk"
-            calorieText.text = "🔥 ${recipe.calories} kal"
-            recommendationReason.text = recipe.recommendationReason
-            availableIngredients.text = "Elindekiler: ${recipe.availableIngredients}"
+            recipeTitle?.text = recipe.title
+            cookingTime?.text = "${recipe.cookingTime} dk"
+            calories?.text = "${recipe.calories} kcal"
+            matchedIngredients?.text = recipe.availableIngredients
 
-            // Glide ile resim yükleme
-            if (!recipe.imageUrl.isNullOrEmpty()) {
-                Glide.with(itemView.context)
-                    .load(recipe.imageUrl)
-                    .placeholder(R.drawable.ic_kitchen_24) // Loading placeholder
-                    .error(R.drawable.ic_kitchen_24) // Error fallback
-                    .centerCrop()
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(recipeImage)
-            } else {
-                // Default image
-                recipeImage.setImageResource(R.drawable.ic_kitchen_24)
+            // Glide ile güvenli görsel yükleme
+            recipeImage?.let { imageView ->
+                loadRecipeImage(imageView, recipe.imageUrl)
             }
 
-            // Kart tıklama olayı
-            itemView.setOnClickListener {
-                onRecipeClick(recipe)
-            }
+            itemView.setOnClickListener { onRecipeClick(recipe) }
+        }
+
+        private fun loadRecipeImage(imageView: ImageView, imageUrl: String?) {
+            val requestOptions = RequestOptions()
+                .placeholder(R.drawable.placeholder_food)
+                .error(R.drawable.placeholder_food)
+                .fallback(R.drawable.placeholder_food)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+
+            val finalUrl = if (imageUrl.isNullOrBlank()) null else imageUrl
+
+            Glide.with(imageView.context)
+                .load(finalUrl)
+                .apply(requestOptions)
+                .into(imageView)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_recipe_card, parent, false)
+            .inflate(R.layout.item_recipe, parent, false)
         return RecipeViewHolder(view)
     }
 
@@ -63,4 +72,9 @@ class RecipeAdapter(
     }
 
     override fun getItemCount(): Int = recipes.size
+
+    fun updateRecipes(newRecipes: List<Recipe>) {
+        recipes = newRecipes
+        notifyDataSetChanged()
+    }
 }

@@ -1,8 +1,11 @@
 package com.yemekonerisistemi.app.ui.recipes
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yemekonerisistemi.app.api.RetrofitClient
+import com.yemekonerisistemi.app.data.DemoDataProvider
+import com.yemekonerisistemi.app.data.repository.FavoriteRepository
 import com.yemekonerisistemi.app.models.Ingredient
 import com.yemekonerisistemi.app.models.Recipe
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +17,9 @@ import kotlinx.coroutines.launch
  * Tarif detay ekranı için ViewModel
  * Tarif bilgileri, favori durumu, malzeme kontrolü
  */
-class RecipeDetailViewModel : ViewModel() {
+class RecipeDetailViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val favoriteRepository = FavoriteRepository(application)
 
     // UI State
     private val _uiState = MutableStateFlow(RecipeDetailUiState())
@@ -43,6 +48,9 @@ class RecipeDetailViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
+            // Favori durumunu kontrol et
+            _isFavorite.value = favoriteRepository.isFavorite(recipeId)
+
             try {
                 val response = RetrofitClient.apiService.getRecipeById(recipeId)
 
@@ -65,18 +73,23 @@ class RecipeDetailViewModel : ViewModel() {
     }
 
     /**
-     * Favori durumunu değiştir
+     * Favori durumunu değiştir - Database'e kaydet
      */
     fun toggleFavorite() {
-        _isFavorite.value = !_isFavorite.value
-        _uiState.value = _uiState.value.copy(
-            lastAction = if (_isFavorite.value) {
-                DetailAction.AddedToFavorites
-            } else {
-                DetailAction.RemovedFromFavorites
-            }
-        )
-        // TODO: Backend'e favori durumunu kaydet
+        val currentRecipe = _recipe.value ?: return
+
+        viewModelScope.launch {
+            val newFavoriteState = favoriteRepository.toggleFavorite(currentRecipe)
+            _isFavorite.value = newFavoriteState
+
+            _uiState.value = _uiState.value.copy(
+                lastAction = if (newFavoriteState) {
+                    DetailAction.AddedToFavorites
+                } else {
+                    DetailAction.RemovedFromFavorites
+                }
+            )
+        }
     }
 
     /**
@@ -99,12 +112,8 @@ class RecipeDetailViewModel : ViewModel() {
         val recipe = _recipe.value ?: return ""
         return """
             ${recipe.title}
-
-            🕐 ${recipe.cookingTime} dakika
-            🔥 ${recipe.calories} kalori
-
+            🕐 ${recipe.cookingTime} dakika | 🔥 ${recipe.calories} kalori
             ${recipe.recommendationReason}
-
             Yemek Öneri Sistemi ile paylaşıldı.
         """.trimIndent()
     }
@@ -143,44 +152,9 @@ class RecipeDetailViewModel : ViewModel() {
      * Demo tarif yükle (offline fallback)
      */
     private fun loadDemoRecipe() {
-        val demoRecipe = Recipe(
-            id = 1,
-            title = "Tavuk Sote",
-            cookingTime = 30,
-            calories = 280,
-            servings = 4,
-            recommendationReason = "Bu tarif envanterinizdeki tavuk, domates ve biber ile mükemmel uyum sağlıyor. " +
-                    "Ayrıca günlük kalori hedefinize uygun ve protein değeri yüksek. " +
-                    "Hazırlanması kolay ve 30 dakikada hazır!",
-            availableIngredients = "Tavuk, Domates, Biber",
-            imageUrl = "",
-            instructions = listOf(
-                "Tavuk göğüslerini küp şeklinde doğrayın ve tuzlayın.",
-                "Domatesleri ve biberleri küp şeklinde doğrayın.",
-                "Soğanı ince ince doğrayın.",
-                "Tavada sıvı yağı kızdırın ve tavukları ekleyin.",
-                "Tavuklar renk alana kadar kavurun (yaklaşık 5-7 dakika).",
-                "Soğanları ekleyip pembeleşene kadar kavurun.",
-                "Domatesleri ve biberleri ekleyin.",
-                "Kapağını kapatıp kısık ateşte sebzeler yumuşayana kadar pişirin (15-20 dakika).",
-                "Tuz ve karabiberle tatlandırın.",
-                "Sıcak servis yapın. Afiyet olsun!"
-            )
-        )
-
-        val demoIngredients = listOf(
-            Ingredient(1, "Tavuk Göğsü", "500", "gram", "Et", isAvailable = true),
-            Ingredient(2, "Domates", "3", "adet", "Sebze", isAvailable = true),
-            Ingredient(3, "Yeşil Biber", "2", "adet", "Sebze", isAvailable = true),
-            Ingredient(4, "Soğan", "1", "adet", "Sebze", isAvailable = true),
-            Ingredient(5, "Sıvı Yağ", "2", "yemek kaşığı", "Yağ", isAvailable = false),
-            Ingredient(6, "Tuz", "1", "çay kaşığı", "Baharat", isAvailable = true),
-            Ingredient(7, "Karabiber", "1", "çay kaşığı", "Baharat", isAvailable = false)
-        )
-
-        _recipe.value = demoRecipe
-        _ingredients.value = demoIngredients
-        calculateMissingIngredients(demoIngredients)
+        _recipe.value = DemoDataProvider.getDemoRecipeDetail()
+        _ingredients.value = DemoDataProvider.getDemoIngredients()
+        calculateMissingIngredients(_ingredients.value)
         _uiState.value = _uiState.value.copy(isLoading = false)
     }
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yemekonerisistemi.app.api.RecipeRecommendationRequest
 import com.yemekonerisistemi.app.api.RetrofitClient
+import com.yemekonerisistemi.app.data.DemoDataProvider
 import com.yemekonerisistemi.app.models.Recipe
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,42 +29,55 @@ class RecipeListViewModel : ViewModel() {
     private val _matchedIngredients = MutableStateFlow<List<String>>(emptyList())
     val matchedIngredients: StateFlow<List<String>> = _matchedIngredients.asStateFlow()
 
-    init {
-        loadRecipes()
-    }
+    // Not: init'te otomatik yükleme yok - Fragment'tan tetikleniyor
 
     /**
      * Tarifleri yükle
+     * @param ingredients Envanterdeki gerçek malzeme listesi
      */
-    fun loadRecipes(ingredients: List<String>? = null) {
+    fun loadRecipes(ingredients: List<String>) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
-            try {
-                val ingredientList = ingredients ?: listOf("Tavuk", "Domates", "Biber", "Yumurta", "Soğan")
+            // Boş envanter kontrolü
+            if (ingredients.isEmpty()) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    isEmpty = true,
+                    error = "Lütfen önce buzdolabınıza malzeme ekleyin"
+                )
+                _recipes.value = emptyList()
+                return@launch
+            }
 
+            try {
                 val request = RecipeRecommendationRequest(
-                    ingredients = ingredientList,
-                    dietary_preferences = null,
-                    max_cooking_time = null,
-                    max_calories = null,
+                    ingredients = ingredients,
+                    dietaryPreferences = null,
+                    maxCookingTime = null,
+                    maxCalories = null,
                     limit = 20
                 )
+
+                android.util.Log.d("RecipeListViewModel", "📤 API'ye gönderilen malzemeler: $ingredients")
 
                 val response = RetrofitClient.apiService.getRecipeRecommendations(request)
 
                 if (response.isSuccessful && response.body() != null) {
                     val body = response.body()!!
                     _recipes.value = body.recipes
-                    _matchedIngredients.value = body.matched_ingredients
+                    _matchedIngredients.value = body.matchedIngredients
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isEmpty = body.recipes.isEmpty()
                     )
+
+                    android.util.Log.d("RecipeListViewModel", "✅ ${body.recipes.size} tarif bulundu")
                 } else {
                     loadDemoRecipes()
                 }
             } catch (e: Exception) {
+                android.util.Log.e("RecipeListViewModel", "❌ API hatası: ${e.message}")
                 _uiState.value = _uiState.value.copy(
                     error = "Backend'e bağlanılamıyor: ${e.message}"
                 )
@@ -77,7 +91,6 @@ class RecipeListViewModel : ViewModel() {
      */
     fun searchRecipes(query: String) {
         if (query.isEmpty()) {
-            loadRecipes()
             return
         }
 
@@ -109,56 +122,10 @@ class RecipeListViewModel : ViewModel() {
     }
 
     /**
-     * Filtreli tarif yükle
-     */
-    fun loadFilteredRecipes(
-        ingredients: List<String>,
-        dietaryPreferences: List<String>? = null,
-        maxCookingTime: Int? = null,
-        maxCalories: Int? = null
-    ) {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-
-            try {
-                val request = RecipeRecommendationRequest(
-                    ingredients = ingredients,
-                    dietary_preferences = dietaryPreferences,
-                    max_cooking_time = maxCookingTime,
-                    max_calories = maxCalories,
-                    limit = 20
-                )
-
-                val response = RetrofitClient.apiService.getRecipeRecommendations(request)
-
-                if (response.isSuccessful && response.body() != null) {
-                    val body = response.body()!!
-                    _recipes.value = body.recipes
-                    _matchedIngredients.value = body.matched_ingredients
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        isEmpty = body.recipes.isEmpty()
-                    )
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = "Tarif bulunamadı"
-                    )
-                }
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    error = "Bağlantı hatası: ${e.message}"
-                )
-            }
-        }
-    }
-
-    /**
      * Yenile
      */
     fun refresh() {
-        loadRecipes()
+        // SharedViewModel'den ingredients alınacak
     }
 
     /**
@@ -172,49 +139,8 @@ class RecipeListViewModel : ViewModel() {
      * Demo tarifleri yükle (offline fallback)
      */
     private fun loadDemoRecipes() {
-        _recipes.value = listOf(
-            Recipe(
-                id = 1,
-                title = "Tavuk Sote",
-                cookingTime = 30,
-                calories = 280,
-                servings = 4,
-                recommendationReason = "Tavuk ve sebzelerinle mükemmel uyum!",
-                availableIngredients = "Tavuk, Domates, Biber",
-                imageUrl = "",
-                instructions = listOf(
-                    "Tavukları küp doğrayın",
-                    "Sebzeleri doğrayın",
-                    "Tavada kavurun"
-                )
-            ),
-            Recipe(
-                id = 2,
-                title = "Kremalı Makarna",
-                cookingTime = 20,
-                calories = 420,
-                servings = 2,
-                recommendationReason = "Hızlı yemek tercihine uygun!",
-                availableIngredients = "Makarna, Yoğurt",
-                imageUrl = "",
-                instructions = listOf("Makarnayı haşlayın", "Sos hazırlayın", "Karıştırın")
-            ),
-            Recipe(
-                id = 3,
-                title = "Sebze Çorbası",
-                cookingTime = 25,
-                calories = 150,
-                servings = 4,
-                recommendationReason = "Sağlıklı ve hafif bir seçim",
-                availableIngredients = "Domates, Soğan, Biber",
-                imageUrl = "",
-                instructions = listOf("Sebzeleri doğrayın", "Kaynatın", "Karıştırın")
-            )
-        )
-        _uiState.value = _uiState.value.copy(
-            isLoading = false,
-            isEmpty = false
-        )
+        _recipes.value = DemoDataProvider.getDemoRecipes()
+        _uiState.value = _uiState.value.copy(isLoading = false, isEmpty = false)
     }
 }
 

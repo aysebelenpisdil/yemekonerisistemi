@@ -8,49 +8,37 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yemekonerisistemi.app.R
 
 /**
- * Arama önerileri için adapter (Trendyol-style)
+ * Arama önerileri için RecyclerView Adapter
  */
 class SearchSuggestionAdapter(
-    private val suggestions: MutableList<String> = mutableListOf(),
     private val onSuggestionClick: (String) -> Unit
-) : RecyclerView.Adapter<SearchSuggestionAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<SearchSuggestionAdapter.SuggestionViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val suggestionText: TextView = view.findViewById(R.id.suggestionText)
-    }
+    private var suggestions: List<String> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_search_suggestion, parent, false)
-        return ViewHolder(view)
-    }
+    inner class SuggestionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val suggestionText: TextView = itemView.findViewById(R.id.suggestionText)
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val suggestion = suggestions[position]
-        holder.suggestionText.text = suggestion
-
-        // Click listener
-        holder.itemView.setOnClickListener {
-            onSuggestionClick(suggestion)
+        fun bind(suggestion: String) {
+            suggestionText.text = suggestion
+            itemView.setOnClickListener { onSuggestionClick(suggestion) }
         }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestionViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_suggestion, parent, false)
+        return SuggestionViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: SuggestionViewHolder, position: Int) {
+        holder.bind(suggestions[position])
     }
 
     override fun getItemCount(): Int = suggestions.size
 
-    /**
-     * Önerileri güncelle
-     */
     fun updateSuggestions(newSuggestions: List<String>) {
-        suggestions.clear()
-        suggestions.addAll(newSuggestions)
-        notifyDataSetChanged()
-    }
-
-    /**
-     * Önerileri temizle
-     */
-    fun clearSuggestions() {
-        suggestions.clear()
+        suggestions = newSuggestions
         notifyDataSetChanged()
     }
 }

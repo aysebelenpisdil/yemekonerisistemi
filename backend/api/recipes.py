@@ -9,7 +9,7 @@ from models.recipe import (
     RecipeRecommendationRequest,
     RecipeRecommendationResponse
 )
-from services.recipe_service import RecipeService
+from services.recipe_service import RecipeService, ensure_image_url, get_default_image_url
 from db.base import get_db
 
 router = APIRouter()
@@ -60,9 +60,16 @@ async def get_recipe_recommendations(
         limit=request.limit
     )
     
+    # Response oluşturulmadan önce image_url kontrolü
+    processed_recipes = []
+    for recipe in recipes:
+        recipe_dict = recipe.dict() if hasattr(recipe, 'dict') else recipe
+        recipe_dict['image_url'] = ensure_image_url(recipe_dict.get('image_url', ''))
+        processed_recipes.append(recipe_dict)
+    
     return RecipeRecommendationResponse(
-        recipes=recipes,
-        total=len(recipes),
+        recipes=processed_recipes,
+        total=len(processed_recipes),
         matched_ingredients=matched_ingredients
     )
 
@@ -89,6 +96,11 @@ async def get_recipe_by_id(
     ID'ye göre tarif detayı getir
     """
     recipe = service.get_recipe_by_id(recipe_id)
-    if not recipe:
-        raise HTTPException(status_code=404, detail="Tarif bulunamadı")
-    return recipe
+    
+    # Response oluşturulmadan önce image_url kontrolü
+    if recipe:
+        recipe_dict = recipe.dict() if hasattr(recipe, 'dict') else recipe
+        recipe_dict['image_url'] = ensure_image_url(recipe_dict.get('image_url', ''))
+        return recipe_dict
+    
+    raise HTTPException(status_code=404, detail="Tarif bulunamadı")

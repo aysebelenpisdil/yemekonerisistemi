@@ -4,12 +4,38 @@ Demo veriler ve tarif öneri mantığı
 """
 import time
 import json
+import random
 from pathlib import Path
 from models.recipe import Recipe
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_
+from sqlalchemy import or_
 from db import models as db_models
+
+
+# Varsayılan yemek görselleri (placeholder)
+DEFAULT_FOOD_IMAGES = [
+    "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400",
+    "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400",
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400",
+    "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400",
+    "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400",
+    "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400",
+    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400",
+]
+
+
+def get_default_image_url() -> str:
+    """Rastgele varsayılan görsel URL'i döndür"""
+    return random.choice(DEFAULT_FOOD_IMAGES)
+
+
+def ensure_image_url(image_url: Optional[str]) -> str:
+    """Görsel URL'i kontrol et, boşsa varsayılan döndür"""
+    if image_url and image_url.strip() and not image_url.startswith("https://example.com"):
+        return image_url
+    return get_default_image_url()
+
 
 class RecipeService:
     """Tarif servisi - DB + demo + JSON implementation"""
@@ -17,11 +43,9 @@ class RecipeService:
     def __init__(self, db: Session = None):
         self.db = db
         if not self.db:
-            # Hardcoded (Turkce) ve JSON (Ingilizce) tarifleri birlestir
             hardcoded = self._load_hardcoded_recipes()
             json_recipes = self._load_json_recipes()
 
-            # ID cakismalarini onlemek icin JSON tariflerinin ID'lerini kaydır
             if hardcoded and json_recipes:
                 max_id = max(r.id for r in hardcoded)
                 for recipe in json_recipes:
@@ -50,22 +74,15 @@ class RecipeService:
                     servings=item.get("servings", 4),
                     recommendation_reason=item.get("recommendation_reason"),
                     available_ingredients=item.get("available_ingredients", ""),
-                    image_url=item.get("image_url", ""),
+                    image_url=ensure_image_url(item.get("image_url", "")),
                     instructions=item.get("instructions", [])
                 )
                 for item in data
             ]
-            print(f"[RecipeService] recipes.json: {len(recipes)} tarif yuklendi")
             return recipes
 
-        except FileNotFoundError:
-            print(f"[RecipeService] Warning: {json_path} bulunamadi")
-            return []
-        except json.JSONDecodeError as e:
-            print(f"[RecipeService] Error parsing {json_path}: {e}")
-            return []
         except Exception as e:
-            print(f"[RecipeService] Unexpected error loading {json_path}: {e}")
+            print(f"[RecipeService] Error loading recipes.json: {e}")
             return []
 
     def _load_json_recipes(self) -> List[Recipe]:
@@ -86,33 +103,28 @@ class RecipeService:
                     servings=item.get("servings", 4),
                     recommendation_reason=item.get("recommendation_reason"),
                     available_ingredients=item.get("available_ingredients", ""),
-                    image_url=item.get("image_url", ""),
+                    image_url=ensure_image_url(item.get("image_url", "")),
                     instructions=item.get("instructions", [])
                 )
                 for item in data
             ]
-            print(f"[RecipeService] recipes_en.json: {len(recipes)} tarif yuklendi")
             return recipes
 
-        except FileNotFoundError:
-            print(f"[RecipeService] Warning: {json_path} bulunamadi, JSON tarifleri atlanıyor")
-            return []
-        except json.JSONDecodeError as e:
-            print(f"[RecipeService] Error parsing {json_path}: {e}")
-            return []
         except Exception as e:
-            print(f"[RecipeService] Unexpected error loading {json_path}: {e}")
+            print(f"[RecipeService] Error loading recipes_en.json: {e}")
             return []
 
+    def _ensure_recipe_image(self, recipe: Recipe) -> Recipe:
+        """Tarif görselini kontrol et ve gerekirse varsayılan ekle"""
+        if not recipe.image_url or recipe.image_url.startswith("https://example.com"):
+            recipe.image_url = get_default_image_url()
+        return recipe
+
     def filter_recipes(self, q: Optional[str] = None, max_time: Optional[int] = None, limit: int = 20) -> List[Recipe]:
-        """
-        Filter recipes by query and max cooking time
-        Logs latency in ms
-        """
+        """Filter recipes by query and max cooking time"""
         start_time = time.time()
 
         if self.db:
-            # Use database
             query = self.db.query(db_models.Recipe)
 
             if q:
@@ -129,7 +141,7 @@ class RecipeService:
             db_recipes = query.limit(limit).all()
 
             results = [
-                Recipe(
+                self._ensure_recipe_image(Recipe(
                     id=r.id,
                     title=r.title,
                     cooking_time=r.cooking_time,
@@ -139,10 +151,9 @@ class RecipeService:
                     available_ingredients=r.available_ingredients,
                     image_url=r.image_url or "",
                     instructions=json.loads(r.instructions) if r.instructions else []
-                ) for r in db_recipes
+                )) for r in db_recipes
             ]
         else:
-            # Use demo recipes
             results = []
             for recipe in self.demo_recipes:
                 if max_time and recipe.cooking_time > max_time:
@@ -153,11 +164,10 @@ class RecipeService:
                     if q_lower not in recipe.title.lower() and q_lower not in (recipe.available_ingredients or "").lower():
                         continue
 
-                results.append(recipe)
+                results.append(self._ensure_recipe_image(recipe))
                 if len(results) >= limit:
                     break
 
-        # Log latency
         latency_ms = (time.time() - start_time) * 1000
         print(f"[RecipeService.filter] q='{q}', max_time={max_time}, results={len(results)}, latency={latency_ms:.1f}ms")
 
@@ -171,10 +181,7 @@ class RecipeService:
         max_calories: int = None,
         limit: int = 20
     ) -> tuple[List[Recipe], List[str]]:
-        """
-        Malzemelere göre tarif önerileri döndür
-        Returns: (recipes, matched_ingredients)
-        """
+        """Malzemelere göre tarif önerileri döndür"""
         start_time = time.time()
 
         if self.db:
@@ -186,7 +193,6 @@ class RecipeService:
             if max_calories:
                 query = query.filter(db_models.Recipe.calories <= max_calories)
 
-            # Simple ingredient matching for DB
             if ingredients:
                 conditions = []
                 for ing in ingredients:
@@ -197,7 +203,7 @@ class RecipeService:
             db_recipes = query.limit(limit).all()
 
             filtered_recipes = [
-                Recipe(
+                self._ensure_recipe_image(Recipe(
                     id=r.id,
                     title=r.title,
                     cooking_time=r.cooking_time,
@@ -207,40 +213,33 @@ class RecipeService:
                     available_ingredients=r.available_ingredients,
                     image_url=r.image_url or "",
                     instructions=json.loads(r.instructions) if r.instructions else []
-                ) for r in db_recipes
+                )) for r in db_recipes
             ]
         else:
-            # Use original logic for demo recipes
             filtered_recipes = []
 
             for recipe in self.demo_recipes:
-                # Cooking time filtresi
                 if max_cooking_time and recipe.cooking_time > max_cooking_time:
                     continue
 
-                # Calories filtresi
                 if max_calories and recipe.calories > max_calories:
                     continue
 
-                # Malzeme uyumu kontrolü (basit string matching)
                 if ingredients:
                     recipe_ingredients = recipe.available_ingredients.lower() if recipe.available_ingredients else ""
                     has_match = any(ing.lower() in recipe_ingredients for ing in ingredients)
                     if has_match:
-                        filtered_recipes.append(recipe)
+                        filtered_recipes.append(self._ensure_recipe_image(recipe))
                 else:
-                    filtered_recipes.append(recipe)
+                    filtered_recipes.append(self._ensure_recipe_image(recipe))
 
-            # Limit uygula
             filtered_recipes = filtered_recipes[:limit]
 
-        # Eşleşen malzemeleri bul
         matched_ingredients = [ing for ing in ingredients if any(
             ing.lower() in (r.available_ingredients or "").lower()
             for r in filtered_recipes
         )]
 
-        # Log latency
         latency_ms = (time.time() - start_time) * 1000
         print(f"[RecipeService.recommendations] ingredients={len(ingredients)}, results={len(filtered_recipes)}, latency={latency_ms:.1f}ms")
 
@@ -248,27 +247,16 @@ class RecipeService:
 
     def search_recipes(self, query: str, limit: int = 20) -> List[Recipe]:
         """Tarif ara"""
-        start_time = time.time()
-
         if not query:
-            # Return empty list for empty query
-            print(f"[RecipeService.search] Empty query, returning [], latency=0.1ms")
             return []
+        return self.filter_recipes(q=query, limit=limit)
 
-        results = self.filter_recipes(q=query, limit=limit)
-
-        # Log latency
-        latency_ms = (time.time() - start_time) * 1000
-        print(f"[RecipeService.search] query='{query}', results={len(results)}, latency={latency_ms:.1f}ms")
-
-        return results
-
-    def get_recipe_by_id(self, recipe_id: int) -> Recipe:
+    def get_recipe_by_id(self, recipe_id: int) -> Optional[Recipe]:
         """ID'ye göre tarif getir"""
         if self.db:
             db_recipe = self.db.query(db_models.Recipe).filter_by(id=recipe_id).first()
             if db_recipe:
-                return Recipe(
+                return self._ensure_recipe_image(Recipe(
                     id=db_recipe.id,
                     title=db_recipe.title,
                     cooking_time=db_recipe.cooking_time,
@@ -278,11 +266,11 @@ class RecipeService:
                     available_ingredients=db_recipe.available_ingredients,
                     image_url=db_recipe.image_url or "",
                     instructions=json.loads(db_recipe.instructions) if db_recipe.instructions else []
-                )
+                ))
             return None
         else:
             for recipe in self.demo_recipes:
                 if recipe.id == recipe_id:
-                    return recipe
+                    return self._ensure_recipe_image(recipe)
             return None
 

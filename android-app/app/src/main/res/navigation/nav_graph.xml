@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/navigation_home">
 
     <!-- Ana Sayfa / Dashboard -->
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/navigation_home"
         android:name="com.yemekonerisistemi.app.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="Ana Sayfa"
         tools:layout="@layout/fragment_home"/>
 
     <!-- Buzdolabım Ekranı -->
     <fragment
-        android:id="@+id/inventoryFragment"
+        android:id="@+id/navigation_inventory"
         android:name="com.yemekonerisistemi.app.ui.inventory.InventoryFragment"
-        android:label="@string/title_inventory"
+        android:label="Buzdolabım"
         tools:layout="@layout/fragment_inventory">
 
         <action
@@ -28,32 +28,34 @@
 
     <!-- Tarif Listesi Ekranı -->
     <fragment
-        android:id="@+id/recipeListFragment"
+        android:id="@+id/navigation_recipes"
         android:name="com.yemekonerisistemi.app.ui.recipes.RecipeListFragment"
-        android:label="@string/title_recipes"
+        android:label="Tarifler"
         tools:layout="@layout/fragment_recipe_list">
 
         <action
             android:id="@+id/action_recipeList_to_recipeDetail"
-            app:destination="@id/recipeDetailFragment"/>
+            app:destination="@id/recipeDetailFragment" />
     </fragment>
 
     <!-- Tarif Detay Ekranı -->
     <fragment
         android:id="@+id/recipeDetailFragment"
         android:name="com.yemekonerisistemi.app.ui.recipes.RecipeDetailFragment"
-        android:label="Tarif Detayı">
+        android:label="Tarif Detayı"
+        tools:layout="@layout/fragment_recipe_detail">
 
         <argument
             android:name="recipeId"
             app:argType="integer"
-            android:defaultValue="0"/>
+            android:defaultValue="-1" />
     </fragment>
 
     <!-- Profil Ekranı -->
     <fragment
-        android:id="@+id/profileFragment"
+        android:id="@+id/navigation_profile"
         android:name="com.yemekonerisistemi.app.ui.profile.ProfileFragment"
-        android:label="@string/title_profile"/>
+        android:label="Profil"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>
