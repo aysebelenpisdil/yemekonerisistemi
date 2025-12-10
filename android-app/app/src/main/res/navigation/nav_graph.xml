@@ -21,7 +21,7 @@
 
         <action
             android:id="@+id/action_inventory_to_recipeList"
-            app:destination="@id/recipeListFragment"
+            app:destination="@id/navigation_recipes"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"/>
     </fragment>

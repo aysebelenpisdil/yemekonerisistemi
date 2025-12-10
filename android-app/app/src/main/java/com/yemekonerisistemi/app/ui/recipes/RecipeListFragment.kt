@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.yemekonerisistemi.app.R
+import com.yemekonerisistemi.app.data.local.UserContextProvider
 import com.yemekonerisistemi.app.models.Recipe
 import com.yemekonerisistemi.app.ui.shared.SharedInventoryViewModel
 import kotlinx.coroutines.launch
@@ -29,6 +31,9 @@ class RecipeListFragment : Fragment() {
 
     // Activity-scoped SharedViewModel - InventoryFragment'tan envanter al
     private val sharedInventoryViewModel: SharedInventoryViewModel by activityViewModels()
+
+    // User context provider for allergens and preferences
+    private lateinit var userContextProvider: UserContextProvider
 
     private lateinit var recipesRecyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
@@ -45,6 +50,9 @@ class RecipeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Initialize UserContextProvider
+        userContextProvider = UserContextProvider(requireContext())
 
         // View'ları bağla
         recipesRecyclerView = view.findViewById(R.id.recipesRecyclerView)
@@ -115,13 +123,22 @@ class RecipeListFragment : Fragment() {
             sharedInventoryViewModel.inventoryItems.collect { items ->
                 val ingredientNames = items.map { it.name }
                 if (ingredientNames.isNotEmpty()) {
-                    // Gerçek envanter malzemelerini kullan
-                    viewModel.loadRecipes(ingredientNames)
+                    // Get user context with preferences and allergens
+                    val userContext = userContextProvider.getUserContextWithIngredients(ingredientNames)
+
+                    // Gerçek envanter malzemelerini ve kullanıcı bağlamını kullan
+                    viewModel.loadRecipes(ingredientNames, userContext)
 
                     android.util.Log.d(
                         "RecipeListFragment",
                         "🥗 Envanter malzemeleri ile tarif aranıyor: $ingredientNames"
                     )
+                    if (userContext.allergens.isNotEmpty()) {
+                        android.util.Log.d(
+                            "RecipeListFragment",
+                            "🛡️ Alerjen filtresi aktif: ${userContext.allergens}"
+                        )
+                    }
                 } else {
                     // Envanter boşsa kullanıcıyı bilgilendir
                     viewModel.loadRecipes(emptyList())

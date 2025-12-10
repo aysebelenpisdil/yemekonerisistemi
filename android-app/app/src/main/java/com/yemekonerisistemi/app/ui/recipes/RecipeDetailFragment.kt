@@ -59,12 +59,12 @@ class RecipeDetailFragment : Fragment() {
     }
 
     private fun initViews(view: View) {
-        recipeImage = view.findViewById(R.id.recipeImage)
-        recipeTitle = view.findViewById(R.id.recipeTitle)
-        cookingTime = view.findViewById(R.id.cookingTime)
-        calories = view.findViewById(R.id.calories)
-        servings = view.findViewById(R.id.servings)
-        recommendationReason = view.findViewById(R.id.recommendationReason)
+        recipeImage = view.findViewById(R.id.recipeImageView)
+        recipeTitle = view.findViewById(R.id.recipeTitleText)
+        cookingTime = view.findViewById(R.id.cookingTimeText)
+        calories = view.findViewById(R.id.caloriesText)
+        servings = view.findViewById(R.id.servingsText)
+        recommendationReason = view.findViewById(R.id.recommendationReasonText)
         favoriteButton = view.findViewById(R.id.favoriteButton)
         shareButton = view.findViewById(R.id.shareButton)
     }
@@ -104,6 +104,7 @@ class RecipeDetailFragment : Fragment() {
                         is DetailAction.AddedToFavorites -> "Favorilere eklendi ❤️"
                         is DetailAction.RemovedFromFavorites -> "Favorilerden çıkarıldı"
                         is DetailAction.AddedToShoppingList -> "${action.count} malzeme listeye eklendi"
+                        is DetailAction.CookingModeStarted -> "Pişirme modu başlatıldı"
                     }
                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                     viewModel.clearLastAction()

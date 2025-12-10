@@ -7,10 +7,12 @@ import json
 import random
 from pathlib import Path
 from models.recipe import Recipe
+from models.user_context import UserContext
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from db import models as db_models
+from utils.allergen_mapping import filter_recipes_by_allergens
 
 
 # Varsayılan yemek görselleri (placeholder)
@@ -179,10 +181,36 @@ class RecipeService:
         dietary_preferences: List[str] = None,
         max_cooking_time: int = None,
         max_calories: int = None,
-        limit: int = 20
+        limit: int = 20,
+        user_context: UserContext = None
     ) -> tuple[List[Recipe], List[str]]:
-        """Malzemelere göre tarif önerileri döndür"""
+        """
+        Malzemelere göre tarif önerileri döndür
+
+        Args:
+            ingredients: Kullanıcının mevcut malzemeleri
+            dietary_preferences: Diyet tercihleri
+            max_cooking_time: Maksimum pişirme süresi (dakika)
+            max_calories: Maksimum kalori
+            limit: Sonuç limiti
+            user_context: Kullanıcı bağlamı (alerjenler, tercihler vs.)
+
+        Returns:
+            Tarif listesi ve eşleşen malzemeler
+        """
         start_time = time.time()
+
+        # Extract allergens from user_context if provided
+        allergens = []
+        if user_context and user_context.allergens:
+            allergens = user_context.allergens
+
+        # Use user_context values if not explicitly provided
+        if user_context:
+            if max_cooking_time is None and user_context.max_cooking_time:
+                max_cooking_time = user_context.max_cooking_time
+            if max_calories is None and user_context.max_calories:
+                max_calories = user_context.max_calories
 
         if self.db:
             query = self.db.query(db_models.Recipe)
@@ -234,6 +262,18 @@ class RecipeService:
                     filtered_recipes.append(self._ensure_recipe_image(recipe))
 
             filtered_recipes = filtered_recipes[:limit]
+
+        # Apply allergen hard filter - remove recipes containing allergens
+        if allergens:
+            pre_filter_count = len(filtered_recipes)
+            # Convert Recipe objects to dicts for filtering
+            recipe_dicts = [
+                {"available_ingredients": r.available_ingredients, "recipe": r}
+                for r in filtered_recipes
+            ]
+            safe_recipe_dicts = filter_recipes_by_allergens(recipe_dicts, allergens)
+            filtered_recipes = [rd["recipe"] for rd in safe_recipe_dicts]
+            print(f"[RecipeService] Allergen filter: {pre_filter_count} -> {len(filtered_recipes)} recipes (allergens: {allergens})")
 
         matched_ingredients = [ing for ing in ingredients if any(
             ing.lower() in (r.available_ingredients or "").lower()

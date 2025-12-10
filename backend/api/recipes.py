@@ -51,13 +51,15 @@ async def get_recipe_recommendations(
     - **max_cooking_time**: Maksimum pişirme süresi (dakika)
     - **max_calories**: Maksimum kalori
     - **limit**: Sonuç limiti
+    - **user_context**: Kullanıcı bağlamı (alerjenler, tercihler, vs.)
     """
     recipes, matched_ingredients = service.get_recipe_recommendations(
         ingredients=request.ingredients,
         dietary_preferences=request.dietary_preferences,
         max_cooking_time=request.max_cooking_time,
         max_calories=request.max_calories,
-        limit=request.limit
+        limit=request.limit,
+        user_context=request.user_context
     )
     
     # Response oluşturulmadan önce image_url kontrolü

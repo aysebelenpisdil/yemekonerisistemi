@@ -1,6 +1,7 @@
 package com.yemekonerisistemi.app.api
 
 import com.google.gson.annotations.SerializedName
+import com.yemekonerisistemi.app.data.model.UserContext
 import com.yemekonerisistemi.app.models.Ingredient
 import com.yemekonerisistemi.app.models.Recipe
 import retrofit2.Response
@@ -85,6 +86,17 @@ interface ApiService {
         @Query("q") query: String,
         @Query("limit") limit: Int = 10
     ): Response<List<String>>
+
+    // ========== RAG ==========
+
+    /**
+     * RAG tabanlı tarif asistanı
+     * POST /api/semantic/rag/ask
+     */
+    @POST("/api/semantic/rag/ask")
+    suspend fun ragAsk(
+        @Body request: RAGRequest
+    ): Response<RAGResponse>
 }
 
 // ========== REQUEST/RESPONSE MODELS ==========
@@ -140,7 +152,10 @@ data class RecipeRecommendationRequest(
     val maxCalories: Int? = null,
 
     @SerializedName("limit")
-    val limit: Int = 20
+    val limit: Int = 20,
+
+    @SerializedName("user_context")
+    val userContext: UserContext? = null
 )
 
 data class RecipeRecommendationResponse(
@@ -177,4 +192,39 @@ data class SemanticSearchResponse(
 
     @SerializedName("total")
     val total: Int
+)
+
+// ========== RAG MODELS ==========
+
+data class RAGRequest(
+    @SerializedName("query")
+    val query: String,
+
+    @SerializedName("user_context")
+    val userContext: UserContext? = null
+)
+
+data class RAGResponse(
+    @SerializedName("answer")
+    val answer: String,
+
+    @SerializedName("sources")
+    val sources: List<RAGSource>,
+
+    @SerializedName("confidence")
+    val confidence: Float,
+
+    @SerializedName("latency_ms")
+    val latencyMs: Float
+)
+
+data class RAGSource(
+    @SerializedName("id")
+    val id: Int,
+
+    @SerializedName("title")
+    val title: String,
+
+    @SerializedName("similarity_score")
+    val similarityScore: Float
 )

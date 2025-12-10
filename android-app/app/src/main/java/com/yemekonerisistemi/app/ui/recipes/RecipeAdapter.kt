@@ -26,15 +26,15 @@ class RecipeAdapter(
     inner class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val recipeImage: ImageView? = itemView.findViewById(R.id.recipeImage)
         private val recipeTitle: TextView? = itemView.findViewById(R.id.recipeTitle)
-        private val cookingTime: TextView? = itemView.findViewById(R.id.cookingTime)
-        private val calories: TextView? = itemView.findViewById(R.id.calories)
-        private val matchedIngredients: TextView? = itemView.findViewById(R.id.matchedIngredients)
+        private val timeText: TextView? = itemView.findViewById(R.id.timeText)
+        private val calorieText: TextView? = itemView.findViewById(R.id.calorieText)
+        private val availableIngredients: TextView? = itemView.findViewById(R.id.availableIngredients)
 
         fun bind(recipe: Recipe) {
             recipeTitle?.text = recipe.title
-            cookingTime?.text = "${recipe.cookingTime} dk"
-            calories?.text = "${recipe.calories} kcal"
-            matchedIngredients?.text = recipe.availableIngredients
+            timeText?.text = "⏱️ ${recipe.cookingTime} dk"
+            calorieText?.text = "🔥 ${recipe.calories} kal"
+            availableIngredients?.text = "Elindekiler: ${recipe.availableIngredients}"
 
             // Glide ile güvenli görsel yükleme
             recipeImage?.let { imageView ->
@@ -63,7 +63,7 @@ class RecipeAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_recipe, parent, false)
+            .inflate(R.layout.item_recipe_card, parent, false)
         return RecipeViewHolder(view)
     }
 

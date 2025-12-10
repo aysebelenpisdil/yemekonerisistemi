@@ -7,6 +7,8 @@ import time
 from typing import Dict, Any, List, Optional
 from .semantic_service import SemanticSearchService
 from .llm_service import OllamaLLMService
+from models.user_context import UserContext
+from utils.allergen_mapping import filter_recipes_by_allergens
 
 
 class RAGService:
@@ -29,6 +31,7 @@ Tariflerin İngilizce isimlerini Türkçe'ye çevirerek kullan."""
         Args:
             query: User's question in Turkish
             user_context: Optional user context (available ingredients, preferences)
+                          Can be dict or UserContext model
             limit: Number of recipes to retrieve
 
         Returns:
@@ -36,9 +39,17 @@ Tariflerin İngilizce isimlerini Türkçe'ye çevirerek kullan."""
         """
         start_time = time.time()
 
+        # Convert dict to UserContext if needed
+        context_obj = None
+        if user_context:
+            if isinstance(user_context, UserContext):
+                context_obj = user_context
+            elif isinstance(user_context, dict):
+                context_obj = UserContext(**user_context)
+
         # Step 1: Retrieve relevant recipes
         print(f"🔍 RAG: Searching for relevant recipes...")
-        recipes = self.semantic_service.search_recipes(query, limit=limit)
+        recipes = self.semantic_service.search_recipes(query, limit=limit * 2)  # Get more for filtering
 
         if not recipes:
             return {
@@ -48,12 +59,39 @@ Tariflerin İngilizce isimlerini Türkçe'ye çevirerek kullan."""
                 "latency_ms": round((time.time() - start_time) * 1000, 1)
             }
 
+        # Step 1.5: Apply allergen hard filter
+        if context_obj and context_obj.allergens:
+            pre_filter_count = len(recipes)
+            recipes = filter_recipes_by_allergens(recipes, context_obj.allergens)
+            print(f"🛡️ RAG: Allergen filter: {pre_filter_count} -> {len(recipes)} recipes")
+
+        # Apply cooking time and calorie filters
+        if context_obj:
+            if context_obj.max_cooking_time:
+                recipes = [r for r in recipes if r.get('cooking_time', 999) <= context_obj.max_cooking_time]
+            if context_obj.max_calories:
+                recipes = [r for r in recipes if r.get('calories', 9999) <= context_obj.max_calories]
+
+        # Limit after filtering
+        recipes = recipes[:limit]
+
+        if not recipes:
+            allergen_msg = ""
+            if context_obj and context_obj.allergens:
+                allergen_msg = f" (alerjen filtresi: {', '.join(context_obj.allergens)})"
+            return {
+                "answer": f"Üzgünüm, kriterlerinize uygun tarif bulamadım{allergen_msg}. Lütfen farklı kelimelerle tekrar deneyin.",
+                "sources": [],
+                "confidence": 0.0,
+                "latency_ms": round((time.time() - start_time) * 1000, 1)
+            }
+
         # Step 2: Build context from recipes
-        context = self._build_context(recipes, user_context)
+        context = self._build_context(recipes, context_obj)
 
         # Step 3: Generate answer using LLM
         print(f"🤖 RAG: Generating response...")
-        prompt = self._build_prompt(query, context, user_context)
+        prompt = self._build_prompt(query, context, context_obj)
 
         llm_result = self.llm_service.generate(prompt)
 
@@ -99,21 +137,51 @@ Talimatlar: {inst_str}
 
         return '\n'.join(context_parts)
 
-    def _build_prompt(self, query: str, context: str, user_context: Dict = None) -> str:
-        """Build the full prompt for LLM"""
+    def _build_prompt(self, query: str, context: str, user_context = None) -> str:
+        """
+        Build the full prompt for LLM with user context
+
+        Args:
+            query: User's question
+            context: Recipe context string
+            user_context: UserContext object or dict
+        """
         prompt = f"""{self.SYSTEM_PROMPT}
 
 İşte bulduğum ilgili tarifler:
 {context}
 
 """
+        # Add user context to prompt
         if user_context:
-            if user_context.get('available_ingredients'):
-                ings = ', '.join(user_context['available_ingredients'][:10])
-                prompt += f"Kullanıcının mevcut malzemeleri: {ings}\n"
+            # Handle both UserContext object and dict
+            if isinstance(user_context, UserContext):
+                context_prompt = user_context.to_system_prompt()
+                if context_prompt:
+                    prompt += f"--- Kullanıcı Bağlamı ---\n{context_prompt}\n\n"
+            elif isinstance(user_context, dict):
+                if user_context.get('available_ingredients'):
+                    ings = ', '.join(user_context['available_ingredients'][:10])
+                    prompt += f"Kullanıcının mevcut malzemeleri: {ings}\n"
 
-            if user_context.get('dietary_restrictions'):
-                prompt += f"Diyet kısıtlamaları: {', '.join(user_context['dietary_restrictions'])}\n"
+                if user_context.get('diet_types'):
+                    prompt += f"Diyet tercihleri: {', '.join(user_context['diet_types'])}\n"
+
+                if user_context.get('allergens'):
+                    allergens = ', '.join(user_context['allergens'])
+                    prompt += f"⚠️ UYARI: Kullanıcının şu alerjileri var: {allergens}. Bu malzemeleri KESİNLİKLE önerme!\n"
+
+                if user_context.get('cuisines'):
+                    prompt += f"Tercih edilen mutfaklar: {', '.join(user_context['cuisines'])}\n"
+
+                if user_context.get('max_cooking_time'):
+                    prompt += f"Maksimum pişirme süresi: {user_context['max_cooking_time']} dakika\n"
+
+                if user_context.get('max_calories'):
+                    prompt += f"Maksimum kalori: {user_context['max_calories']} kcal\n"
+
+                if user_context.get('dietary_restrictions'):
+                    prompt += f"Diyet kısıtlamaları: {', '.join(user_context['dietary_restrictions'])}\n"
 
         prompt += f"""
 Kullanıcının sorusu: {query}

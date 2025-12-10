@@ -11,6 +11,7 @@ from services.rag_service import RAGService
 from services.llm_service import OllamaLLMService
 from services.cache_service import get_cache
 from models.ingredient import Ingredient
+from models.user_context import UserContext
 
 router = APIRouter()
 
@@ -53,6 +54,7 @@ class RAGRequest(BaseModel):
     """RAG ask request"""
     query: str
     context: Optional[Dict[str, Any]] = None
+    user_context: Optional[UserContext] = None
 
 
 class RAGResponse(BaseModel):
@@ -184,6 +186,7 @@ async def rag_ask(
     RAG-based recipe assistant
 
     Ask questions in Turkish about recipes and get intelligent answers.
+    Supports user context for personalized recommendations with allergen filtering.
 
     Example queries:
     - "Akşam yemeği için hızlı bir şey öner"
@@ -192,9 +195,12 @@ async def rag_ask(
     """
     print(f"\n🤖 RAG Ask: '{request.query}'")
 
+    # Use user_context if provided, otherwise fall back to legacy context
+    context_to_use = request.user_context if request.user_context else request.context
+
     result = rag_service.answer(
         query=request.query,
-        user_context=request.context
+        user_context=context_to_use
     )
 
     return RAGResponse(

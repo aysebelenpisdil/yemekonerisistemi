@@ -20,6 +20,8 @@ class UserPreferences(private val context: Context) {
         val DIET_TYPES_KEY = stringSetPreferencesKey("diet_types")
         val ALLERGENS_KEY = stringSetPreferencesKey("allergens")
         val CUISINES_KEY = stringSetPreferencesKey("cuisines")
+        val MAX_COOKING_TIME_KEY = intPreferencesKey("max_cooking_time")
+        val MAX_CALORIES_KEY = intPreferencesKey("max_calories")
         val NOTIFICATIONS_RECOMMENDATIONS_KEY = booleanPreferencesKey("notifications_recommendations")
         val NOTIFICATIONS_INVENTORY_KEY = booleanPreferencesKey("notifications_inventory")
         val NOTIFICATIONS_WEEKLY_SUMMARY_KEY = booleanPreferencesKey("notifications_weekly_summary")
@@ -79,6 +81,52 @@ class UserPreferences(private val context: Context) {
     suspend fun updateCuisines(cuisines: Set<String>) {
         dataStore.edit { preferences ->
             preferences[CUISINES_KEY] = cuisines
+        }
+    }
+
+    // Max Cooking Time (minutes, null = no limit)
+    val maxCookingTime: Flow<Int?> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[MAX_COOKING_TIME_KEY]
+        }
+
+    suspend fun updateMaxCookingTime(minutes: Int?) {
+        dataStore.edit { preferences ->
+            if (minutes != null) {
+                preferences[MAX_COOKING_TIME_KEY] = minutes
+            } else {
+                preferences.remove(MAX_COOKING_TIME_KEY)
+            }
+        }
+    }
+
+    // Max Calories (null = no limit)
+    val maxCalories: Flow<Int?> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[MAX_CALORIES_KEY]
+        }
+
+    suspend fun updateMaxCalories(calories: Int?) {
+        dataStore.edit { preferences ->
+            if (calories != null) {
+                preferences[MAX_CALORIES_KEY] = calories
+            } else {
+                preferences.remove(MAX_CALORIES_KEY)
+            }
         }
     }
 

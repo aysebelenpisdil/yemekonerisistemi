@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.yemekonerisistemi.app.api.RecipeRecommendationRequest
 import com.yemekonerisistemi.app.api.RetrofitClient
 import com.yemekonerisistemi.app.data.DemoDataProvider
+import com.yemekonerisistemi.app.data.model.UserContext
 import com.yemekonerisistemi.app.models.Recipe
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +35,9 @@ class RecipeListViewModel : ViewModel() {
     /**
      * Tarifleri yükle
      * @param ingredients Envanterdeki gerçek malzeme listesi
+     * @param userContext Kullanıcı bağlamı (alerjenler, tercihler vs.)
      */
-    fun loadRecipes(ingredients: List<String>) {
+    fun loadRecipes(ingredients: List<String>, userContext: UserContext? = null) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
@@ -53,13 +55,17 @@ class RecipeListViewModel : ViewModel() {
             try {
                 val request = RecipeRecommendationRequest(
                     ingredients = ingredients,
-                    dietaryPreferences = null,
-                    maxCookingTime = null,
-                    maxCalories = null,
-                    limit = 20
+                    dietaryPreferences = userContext?.dietTypes,
+                    maxCookingTime = userContext?.maxCookingTime,
+                    maxCalories = userContext?.maxCalories,
+                    limit = 20,
+                    userContext = userContext
                 )
 
                 android.util.Log.d("RecipeListViewModel", "📤 API'ye gönderilen malzemeler: $ingredients")
+                if (userContext?.allergens?.isNotEmpty() == true) {
+                    android.util.Log.d("RecipeListViewModel", "🛡️ Alerjen filtresi: ${userContext.allergens}")
+                }
 
                 val response = RetrofitClient.apiService.getRecipeRecommendations(request)
 

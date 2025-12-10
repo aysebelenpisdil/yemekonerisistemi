@@ -3,6 +3,8 @@ Tarif (Recipe) modeli
 """
 from pydantic import BaseModel
 from typing import Optional, List
+from .user_context import UserContext
+
 
 class Recipe(BaseModel):
     """Yemek tarifi modeli"""
@@ -16,6 +18,7 @@ class Recipe(BaseModel):
     image_url: Optional[str] = ""
     instructions: List[str] = []
 
+
 class RecipeRecommendationRequest(BaseModel):
     """Tarif önerisi istek modeli"""
     ingredients: List[str]
@@ -23,6 +26,8 @@ class RecipeRecommendationRequest(BaseModel):
     max_cooking_time: Optional[int] = None
     max_calories: Optional[int] = None
     limit: int = 20
+    user_context: Optional[UserContext] = None
+
 
 class RecipeRecommendationResponse(BaseModel):
     """Tarif önerisi cevap modeli"""

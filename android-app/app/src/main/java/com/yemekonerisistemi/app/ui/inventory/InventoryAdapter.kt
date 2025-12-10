@@ -3,9 +3,9 @@ package com.yemekonerisistemi.app.ui.inventory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.models.InventoryItem
 
@@ -19,19 +19,17 @@ class InventoryAdapter(
 ) : RecyclerView.Adapter<InventoryAdapter.InventoryViewHolder>() {
 
     inner class InventoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val ingredientName: TextView? = itemView.findViewById(R.id.ingredientName)
+        private val ingredientNameText: TextView? = itemView.findViewById(R.id.ingredientNameText)
         private val quantityText: TextView? = itemView.findViewById(R.id.quantityText)
-        private val unitText: TextView? = itemView.findViewById(R.id.unitText)
-        private val decreaseButton: ImageButton? = itemView.findViewById(R.id.decreaseButton)
-        private val increaseButton: ImageButton? = itemView.findViewById(R.id.increaseButton)
-        private val deleteButton: ImageButton? = itemView.findViewById(R.id.deleteButton)
+        private val decrementButton: MaterialButton? = itemView.findViewById(R.id.decrementButton)
+        private val incrementButton: MaterialButton? = itemView.findViewById(R.id.incrementButton)
+        private val deleteButton: MaterialButton? = itemView.findViewById(R.id.deleteButton)
 
         fun bind(item: InventoryItem) {
-            ingredientName?.text = item.name
+            ingredientNameText?.text = item.name
             quantityText?.text = item.quantity.toString()
-            unitText?.text = item.unit
 
-            decreaseButton?.setOnClickListener {
+            decrementButton?.setOnClickListener {
                 if (item.quantity > 1) {
                     val updatedItem = item.copy(quantity = item.quantity - 1)
                     onQuantityChanged(updatedItem)
@@ -40,7 +38,7 @@ class InventoryAdapter(
                 }
             }
 
-            increaseButton?.setOnClickListener {
+            incrementButton?.setOnClickListener {
                 val updatedItem = item.copy(quantity = item.quantity + 1)
                 onQuantityChanged(updatedItem)
             }
@@ -53,7 +51,7 @@ class InventoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InventoryViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_inventory, parent, false)
+            .inflate(R.layout.item_ingredient, parent, false)
         return InventoryViewHolder(view)
     }
 

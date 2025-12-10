@@ -26,22 +26,22 @@ class MainActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.navigation_home -> {
                         // Ana Sayfa ekranına git
-                        navController.navigate(R.id.homeFragment)
+                        navController.navigate(R.id.navigation_home)
                         true
                     }
                     R.id.navigation_inventory -> {
                         // Buzdolabım ekranına git
-                        navController.navigate(R.id.inventoryFragment)
+                        navController.navigate(R.id.navigation_inventory)
                         true
                     }
                     R.id.navigation_recipes -> {
                         // Tarifler ekranına git
-                        navController.navigate(R.id.recipeListFragment)
+                        navController.navigate(R.id.navigation_recipes)
                         true
                     }
                     R.id.navigation_profile -> {
                         // Profil ekranına git
-                        navController.navigate(R.id.profileFragment)
+                        navController.navigate(R.id.navigation_profile)
                         true
                     }
                     else -> false
