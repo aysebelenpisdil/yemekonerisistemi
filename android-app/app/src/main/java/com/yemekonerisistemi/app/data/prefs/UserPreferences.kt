@@ -22,6 +22,12 @@ class UserPreferences(private val context: Context) {
         val CUISINES_KEY = stringSetPreferencesKey("cuisines")
         val MAX_COOKING_TIME_KEY = intPreferencesKey("max_cooking_time")
         val MAX_CALORIES_KEY = intPreferencesKey("max_calories")
+        val COOKING_TIME_PREFERENCES_KEY = stringSetPreferencesKey("cooking_time_preferences")
+        val CALORIE_PREFERENCES_KEY = stringSetPreferencesKey("calorie_preferences")
+        val SKILL_LEVELS_KEY = stringSetPreferencesKey("skill_levels")
+        val SPICE_PREFERENCES_KEY = stringSetPreferencesKey("spice_preferences")
+        val SERVING_SIZES_KEY = stringSetPreferencesKey("serving_sizes")
+        val MEAL_TYPES_KEY = stringSetPreferencesKey("meal_types")
         val NOTIFICATIONS_RECOMMENDATIONS_KEY = booleanPreferencesKey("notifications_recommendations")
         val NOTIFICATIONS_INVENTORY_KEY = booleanPreferencesKey("notifications_inventory")
         val NOTIFICATIONS_WEEKLY_SUMMARY_KEY = booleanPreferencesKey("notifications_weekly_summary")
@@ -127,6 +133,120 @@ class UserPreferences(private val context: Context) {
             } else {
                 preferences.remove(MAX_CALORIES_KEY)
             }
+        }
+    }
+
+    // Cooking Time Preferences (chip-based)
+    val cookingTimePreferences: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[COOKING_TIME_PREFERENCES_KEY] ?: emptySet()
+        }
+
+    suspend fun updateCookingTimePreferences(preferences: Set<String>) {
+        dataStore.edit { prefs ->
+            prefs[COOKING_TIME_PREFERENCES_KEY] = preferences
+        }
+    }
+
+    // Calorie Preferences (chip-based)
+    val caloriePreferences: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[CALORIE_PREFERENCES_KEY] ?: emptySet()
+        }
+
+    suspend fun updateCaloriePreferences(preferences: Set<String>) {
+        dataStore.edit { prefs ->
+            prefs[CALORIE_PREFERENCES_KEY] = preferences
+        }
+    }
+
+    // Skill Levels
+    val skillLevels: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[SKILL_LEVELS_KEY] ?: emptySet()
+        }
+
+    suspend fun updateSkillLevels(skillLevels: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[SKILL_LEVELS_KEY] = skillLevels
+        }
+    }
+
+    // Spice Preferences
+    val spicePreferences: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[SPICE_PREFERENCES_KEY] ?: emptySet()
+        }
+
+    suspend fun updateSpicePreferences(spicePreferences: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[SPICE_PREFERENCES_KEY] = spicePreferences
+        }
+    }
+
+    // Serving Sizes
+    val servingSizes: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[SERVING_SIZES_KEY] ?: emptySet()
+        }
+
+    suspend fun updateServingSizes(servingSizes: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[SERVING_SIZES_KEY] = servingSizes
+        }
+    }
+
+    // Meal Types
+    val mealTypes: Flow<Set<String>> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map { preferences ->
+            preferences[MEAL_TYPES_KEY] ?: emptySet()
+        }
+
+    suspend fun updateMealTypes(mealTypes: Set<String>) {
+        dataStore.edit { preferences ->
+            preferences[MEAL_TYPES_KEY] = mealTypes
         }
     }
 

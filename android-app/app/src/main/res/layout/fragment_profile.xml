@@ -79,7 +79,7 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Tercihler Kartı -->
+            <!-- Tercihler Kartı - Expandable Sections -->
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.YOS.Card.Recipe"
                 android:layout_width="match_parent"
@@ -98,156 +98,61 @@
                         android:layout_height="wrap_content"
                         android:text="Tercihler"
                         android:textColor="@color/yos_text_primary"
-                        android:layout_marginBottom="16dp"/>
+                        android:layout_marginBottom="8dp"/>
 
                     <!-- Diyet Tipleri -->
-                    <TextView
-                        style="@style/TextAppearance.YOS.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Diyet Tipi"
-                        android:textColor="@color/yos_text_secondary"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/dietChipGroup"
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefDietTypes"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:singleSelection="false">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipVegetarian"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Vejetaryen"
-                            android:checkable="true"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipVegan"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Vegan"
-                            android:checkable="true"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipGlutenFree"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Glutensiz"
-                            android:checkable="true"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipKeto"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Keto"
-                            android:checkable="true"/>
-
-                    </com.google.android.material.chip.ChipGroup>
+                        android:layout_height="wrap_content"/>
 
                     <!-- Alerjenler -->
-                    <TextView
-                        style="@style/TextAppearance.YOS.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Alerjenler"
-                        android:textColor="@color/yos_text_secondary"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/allergenChipGroup"
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefAllergens"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        app:singleSelection="false">
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipNuts"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Fındık/Fıstık"
-                            android:checkable="true"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipMilk"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Süt"
-                            android:checkable="true"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipEgg"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Yumurta"
-                            android:checkable="true"/>
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipSeafood"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Deniz Ürünleri"
-                            android:checkable="true"/>
-
-                    </com.google.android.material.chip.ChipGroup>
+                        android:layout_height="wrap_content"/>
 
                     <!-- Mutfak Tercihleri -->
-                    <TextView
-                        style="@style/TextAppearance.YOS.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Mutfak Tercihleri"
-                        android:textColor="@color/yos_text_secondary"
-                        android:layout_marginBottom="8dp"/>
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/cuisineChipGroup"
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefCuisines"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:singleSelection="false">
+                        android:layout_height="wrap_content"/>
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipTurkish"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Türk"
-                            android:checkable="true"/>
+                    <!-- Pişirme Süresi -->
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefCookingTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipItalian"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="İtalyan"
-                            android:checkable="true"/>
+                    <!-- Kalori Limiti -->
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefCalories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipAsian"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Asya"
-                            android:checkable="true"/>
+                    <!-- Zorluk Seviyesi -->
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefSkillLevels"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipMediterranean"
-                            style="@style/Widget.YOS.Chip.Choice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Akdeniz"
-                            android:checkable="true"/>
+                    <!-- Baharatlılık -->
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefSpice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                    </com.google.android.material.chip.ChipGroup>
+                    <!-- Porsiyon -->
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefServingSizes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <!-- Öğün Tipi -->
+                    <com.yemekonerisistemi.app.ui.components.ExpandablePreferenceView
+                        android:id="@+id/prefMealTypes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
                 </LinearLayout>
 

@@ -37,6 +37,18 @@
     <string name="favorite_added">Favorilere eklendi</string>
     <string name="favorite_removed">Favorilerden çıkarıldı</string>
 
+    <!-- Profil Tercihleri -->
+    <string name="expand_collapse">Genişlet/Daralt</string>
+    <string name="pref_diet_types">Diyet Tipleri</string>
+    <string name="pref_allergens">Alerjenler</string>
+    <string name="pref_cuisines">Mutfak Tercihleri</string>
+    <string name="pref_cooking_time">Pişirme Süresi</string>
+    <string name="pref_calories">Kalori Limiti</string>
+    <string name="pref_skill_levels">Zorluk Seviyesi</string>
+    <string name="pref_spice">Baharatlılık</string>
+    <string name="pref_serving_sizes">Porsiyon</string>
+    <string name="pref_meal_types">Öğün Tipi</string>
+
     <!-- Genel -->
     <string name="loading">Yükleniyor...</string>
     <string name="error_message">Bir hata oluştu. Lütfen tekrar deneyin.</string>

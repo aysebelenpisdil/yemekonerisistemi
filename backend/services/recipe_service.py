@@ -206,11 +206,12 @@ class RecipeService:
             allergens = user_context.allergens
 
         # Use user_context values if not explicitly provided
+        # Prioritize chip-based preferences over legacy fields
         if user_context:
-            if max_cooking_time is None and user_context.max_cooking_time:
-                max_cooking_time = user_context.max_cooking_time
-            if max_calories is None and user_context.max_calories:
-                max_calories = user_context.max_calories
+            if max_cooking_time is None:
+                max_cooking_time = user_context.get_max_cooking_time_from_prefs()
+            if max_calories is None:
+                max_calories = user_context.get_max_calories_from_prefs()
 
         if self.db:
             query = self.db.query(db_models.Recipe)

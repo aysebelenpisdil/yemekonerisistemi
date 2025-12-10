@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.yemekonerisistemi.app.R
 import com.yemekonerisistemi.app.data.prefs.UserPreferences
 import com.yemekonerisistemi.app.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
@@ -18,6 +19,36 @@ class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+
+    // Chip options for each preference category
+    companion object {
+        val DIET_TYPES = listOf(
+            "Vejetaryen", "Vegan", "Glutensiz", "Keto",
+            "Paleo", "Düşük Karbonhidrat", "Helal", "Pescetaryen"
+        )
+
+        val ALLERGENS = listOf(
+            "Fındık/Fıstık", "Süt", "Yumurta", "Deniz Ürünleri",
+            "Gluten", "Soya", "Susam", "Kereviz", "Hardal"
+        )
+
+        val CUISINES = listOf(
+            "Türk", "İtalyan", "Asya", "Akdeniz",
+            "Meksika", "Hint", "Japon", "Fransız", "Ortadoğu"
+        )
+
+        val COOKING_TIMES = listOf("15dk", "30dk", "45dk", "60dk", "90+dk")
+
+        val CALORIES = listOf("300kcal", "500kcal", "750kcal", "1000kcal", "1500+kcal")
+
+        val SKILL_LEVELS = listOf("Başlangıç", "Orta", "İleri")
+
+        val SPICE_LEVELS = listOf("Acısız", "Az Acılı", "Orta", "Çok Acılı")
+
+        val SERVING_SIZES = listOf("1-2 kişi", "3-4 kişi", "5+ kişi")
+
+        val MEAL_TYPES = listOf("Kahvaltı", "Öğle", "Akşam", "Atıştırmalık")
+    }
 
     // Provide factory to inject UserPreferences into ProfileViewModel
     private val viewModel: ProfileViewModel by viewModels {
@@ -67,46 +98,86 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupPreferences() {
-        // Diet chips
-        binding.chipVegetarian.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateDietType("Vejetaryen", isChecked)
-        }
-        binding.chipVegan.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateDietType("Vegan", isChecked)
-        }
-        binding.chipGlutenFree.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateDietType("Glutensiz", isChecked)
-        }
-        binding.chipKeto.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateDietType("Keto", isChecked)
+        // Diet Types
+        binding.prefDietTypes.apply {
+            setTitle(getString(R.string.pref_diet_types))
+            setChips(DIET_TYPES)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateDietTypes(selected)
+            }
         }
 
-        // Allergen chips
-        binding.chipNuts.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateAllergen("Fındık/Fıstık", isChecked)
-        }
-        binding.chipMilk.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateAllergen("Süt", isChecked)
-        }
-        binding.chipEgg.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateAllergen("Yumurta", isChecked)
-        }
-        binding.chipSeafood.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateAllergen("Deniz Ürünleri", isChecked)
+        // Allergens
+        binding.prefAllergens.apply {
+            setTitle(getString(R.string.pref_allergens))
+            setChips(ALLERGENS)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateAllergens(selected)
+            }
         }
 
-        // Cuisine chips
-        binding.chipTurkish.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateCuisine("Türk", isChecked)
+        // Cuisines
+        binding.prefCuisines.apply {
+            setTitle(getString(R.string.pref_cuisines))
+            setChips(CUISINES)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateCuisines(selected)
+            }
         }
-        binding.chipItalian.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateCuisine("İtalyan", isChecked)
+
+        // Cooking Time
+        binding.prefCookingTime.apply {
+            setTitle(getString(R.string.pref_cooking_time))
+            setChips(COOKING_TIMES)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateCookingTimePreferences(selected)
+            }
         }
-        binding.chipAsian.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateCuisine("Asya", isChecked)
+
+        // Calories
+        binding.prefCalories.apply {
+            setTitle(getString(R.string.pref_calories))
+            setChips(CALORIES)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateCaloriePreferences(selected)
+            }
         }
-        binding.chipMediterranean.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateCuisine("Akdeniz", isChecked)
+
+        // Skill Levels
+        binding.prefSkillLevels.apply {
+            setTitle(getString(R.string.pref_skill_levels))
+            setChips(SKILL_LEVELS)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateSkillLevels(selected)
+            }
+        }
+
+        // Spice Preferences
+        binding.prefSpice.apply {
+            setTitle(getString(R.string.pref_spice))
+            setChips(SPICE_LEVELS)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateSpicePreferences(selected)
+            }
+        }
+
+        // Serving Sizes
+        binding.prefServingSizes.apply {
+            setTitle(getString(R.string.pref_serving_sizes))
+            setChips(SERVING_SIZES)
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateServingSizes(selected)
+            }
+        }
+
+        // Meal Types
+        binding.prefMealTypes.apply {
+            setTitle(getString(R.string.pref_meal_types))
+            setChips(MEAL_TYPES)
+            setShowDivider(false) // Last item, no divider
+            setOnSelectionChangedListener { selected ->
+                viewModel.updateMealTypes(selected)
+            }
         }
     }
 
@@ -159,28 +230,55 @@ class ProfileFragment : Fragment() {
     private fun observeViewModel() {
         lifecycleScope.launch {
             viewModel.dietTypes.collect { dietTypes ->
-                binding.chipVegetarian.isChecked = dietTypes.contains("Vejetaryen")
-                binding.chipVegan.isChecked = dietTypes.contains("Vegan")
-                binding.chipGlutenFree.isChecked = dietTypes.contains("Glutensiz")
-                binding.chipKeto.isChecked = dietTypes.contains("Keto")
+                binding.prefDietTypes.setSelectedItems(dietTypes)
             }
         }
 
         lifecycleScope.launch {
             viewModel.allergens.collect { allergens ->
-                binding.chipNuts.isChecked = allergens.contains("Fındık/Fıstık")
-                binding.chipMilk.isChecked = allergens.contains("Süt")
-                binding.chipEgg.isChecked = allergens.contains("Yumurta")
-                binding.chipSeafood.isChecked = allergens.contains("Deniz Ürünleri")
+                binding.prefAllergens.setSelectedItems(allergens)
             }
         }
 
         lifecycleScope.launch {
             viewModel.cuisines.collect { cuisines ->
-                binding.chipTurkish.isChecked = cuisines.contains("Türk")
-                binding.chipItalian.isChecked = cuisines.contains("İtalyan")
-                binding.chipAsian.isChecked = cuisines.contains("Asya")
-                binding.chipMediterranean.isChecked = cuisines.contains("Akdeniz")
+                binding.prefCuisines.setSelectedItems(cuisines)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.cookingTimePreferences.collect { prefs ->
+                binding.prefCookingTime.setSelectedItems(prefs)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.caloriePreferences.collect { prefs ->
+                binding.prefCalories.setSelectedItems(prefs)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.skillLevels.collect { levels ->
+                binding.prefSkillLevels.setSelectedItems(levels)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.spicePreferences.collect { prefs ->
+                binding.prefSpice.setSelectedItems(prefs)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.servingSizes.collect { sizes ->
+                binding.prefServingSizes.setSelectedItems(sizes)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.mealTypes.collect { types ->
+                binding.prefMealTypes.setSelectedItems(types)
             }
         }
 

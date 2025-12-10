@@ -22,6 +22,30 @@ class ProfileViewModel(private val userPreferences: UserPreferences) : ViewModel
     private val _cuisines = MutableStateFlow(setOf<String>())
     val cuisines: StateFlow<Set<String>> = _cuisines.asStateFlow()
 
+    // Cooking time preferences (chip-based)
+    private val _cookingTimePreferences = MutableStateFlow(setOf<String>())
+    val cookingTimePreferences: StateFlow<Set<String>> = _cookingTimePreferences.asStateFlow()
+
+    // Calorie preferences (chip-based)
+    private val _caloriePreferences = MutableStateFlow(setOf<String>())
+    val caloriePreferences: StateFlow<Set<String>> = _caloriePreferences.asStateFlow()
+
+    // Skill levels
+    private val _skillLevels = MutableStateFlow(setOf<String>())
+    val skillLevels: StateFlow<Set<String>> = _skillLevels.asStateFlow()
+
+    // Spice preferences
+    private val _spicePreferences = MutableStateFlow(setOf<String>())
+    val spicePreferences: StateFlow<Set<String>> = _spicePreferences.asStateFlow()
+
+    // Serving sizes
+    private val _servingSizes = MutableStateFlow(setOf<String>())
+    val servingSizes: StateFlow<Set<String>> = _servingSizes.asStateFlow()
+
+    // Meal types
+    private val _mealTypes = MutableStateFlow(setOf<String>())
+    val mealTypes: StateFlow<Set<String>> = _mealTypes.asStateFlow()
+
     // Notification settings
     private val _notificationSettings = MutableStateFlow(mapOf<String, Boolean>())
     val notificationSettings: StateFlow<Map<String, Boolean>> = _notificationSettings.asStateFlow()
@@ -50,6 +74,42 @@ class ProfileViewModel(private val userPreferences: UserPreferences) : ViewModel
         }
 
         viewModelScope.launch {
+            userPreferences.cookingTimePreferences.collect { prefs ->
+                _cookingTimePreferences.value = prefs
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.caloriePreferences.collect { prefs ->
+                _caloriePreferences.value = prefs
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.skillLevels.collect { levels ->
+                _skillLevels.value = levels
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.spicePreferences.collect { prefs ->
+                _spicePreferences.value = prefs
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.servingSizes.collect { sizes ->
+                _servingSizes.value = sizes
+            }
+        }
+
+        viewModelScope.launch {
+            userPreferences.mealTypes.collect { types ->
+                _mealTypes.value = types
+            }
+        }
+
+        viewModelScope.launch {
             userPreferences.notificationsRecommendations.collect { enabled ->
                 _notificationSettings.value = _notificationSettings.value + ("recommendations" to enabled)
             }
@@ -68,42 +128,67 @@ class ProfileViewModel(private val userPreferences: UserPreferences) : ViewModel
         }
     }
 
-    fun updateDietType(dietType: String, isSelected: Boolean) {
+    // Update functions for set-based preferences
+    fun updateDietTypes(dietTypes: Set<String>) {
         viewModelScope.launch {
-            val currentDietTypes = _dietTypes.value.toMutableSet()
-            if (isSelected) {
-                currentDietTypes.add(dietType)
-            } else {
-                currentDietTypes.remove(dietType)
-            }
-            _dietTypes.value = currentDietTypes
-            userPreferences.updateDietTypes(currentDietTypes)
+            _dietTypes.value = dietTypes
+            userPreferences.updateDietTypes(dietTypes)
         }
     }
 
-    fun updateAllergen(allergen: String, isSelected: Boolean) {
+    fun updateAllergens(allergens: Set<String>) {
         viewModelScope.launch {
-            val currentAllergens = _allergens.value.toMutableSet()
-            if (isSelected) {
-                currentAllergens.add(allergen)
-            } else {
-                currentAllergens.remove(allergen)
-            }
-            _allergens.value = currentAllergens
-            userPreferences.updateAllergens(currentAllergens)
+            _allergens.value = allergens
+            userPreferences.updateAllergens(allergens)
         }
     }
 
-    fun updateCuisine(cuisine: String, isSelected: Boolean) {
+    fun updateCuisines(cuisines: Set<String>) {
         viewModelScope.launch {
-            val currentCuisines = _cuisines.value.toMutableSet()
-            if (isSelected) {
-                currentCuisines.add(cuisine)
-            } else {
-                currentCuisines.remove(cuisine)
-            }
-            _cuisines.value = currentCuisines
-            userPreferences.updateCuisines(currentCuisines)
+            _cuisines.value = cuisines
+            userPreferences.updateCuisines(cuisines)
+        }
+    }
+
+    fun updateCookingTimePreferences(prefs: Set<String>) {
+        viewModelScope.launch {
+            _cookingTimePreferences.value = prefs
+            userPreferences.updateCookingTimePreferences(prefs)
+        }
+    }
+
+    fun updateCaloriePreferences(prefs: Set<String>) {
+        viewModelScope.launch {
+            _caloriePreferences.value = prefs
+            userPreferences.updateCaloriePreferences(prefs)
+        }
+    }
+
+    fun updateSkillLevels(levels: Set<String>) {
+        viewModelScope.launch {
+            _skillLevels.value = levels
+            userPreferences.updateSkillLevels(levels)
+        }
+    }
+
+    fun updateSpicePreferences(prefs: Set<String>) {
+        viewModelScope.launch {
+            _spicePreferences.value = prefs
+            userPreferences.updateSpicePreferences(prefs)
+        }
+    }
+
+    fun updateServingSizes(sizes: Set<String>) {
+        viewModelScope.launch {
+            _servingSizes.value = sizes
+            userPreferences.updateServingSizes(sizes)
+        }
+    }
+
+    fun updateMealTypes(types: Set<String>) {
+        viewModelScope.launch {
+            _mealTypes.value = types
+            userPreferences.updateMealTypes(types)
         }
     }
 

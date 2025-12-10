@@ -23,7 +23,25 @@ data class UserContext(
     val maxCookingTime: Int? = null,
 
     @SerializedName("max_calories")
-    val maxCalories: Int? = null
+    val maxCalories: Int? = null,
+
+    @SerializedName("cooking_time_preferences")
+    val cookingTimePreferences: List<String> = emptyList(),
+
+    @SerializedName("calorie_preferences")
+    val caloriePreferences: List<String> = emptyList(),
+
+    @SerializedName("skill_levels")
+    val skillLevels: List<String> = emptyList(),
+
+    @SerializedName("spice_preferences")
+    val spicePreferences: List<String> = emptyList(),
+
+    @SerializedName("serving_sizes")
+    val servingSizes: List<String> = emptyList(),
+
+    @SerializedName("meal_types")
+    val mealTypes: List<String> = emptyList()
 ) {
     /**
      * Check if user has any dietary restrictions (allergens or diet types)
@@ -37,7 +55,13 @@ data class UserContext(
             allergens.isNotEmpty() ||
             cuisines.isNotEmpty() ||
             maxCookingTime != null ||
-            maxCalories != null
+            maxCalories != null ||
+            cookingTimePreferences.isNotEmpty() ||
+            caloriePreferences.isNotEmpty() ||
+            skillLevels.isNotEmpty() ||
+            spicePreferences.isNotEmpty() ||
+            servingSizes.isNotEmpty() ||
+            mealTypes.isNotEmpty()
 
     companion object {
         /**
